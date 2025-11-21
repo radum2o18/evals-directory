@@ -8,13 +8,25 @@ export default defineNuxtConfig({
     '@nuxt/hints',
     '@nuxt/image',
     '@nuxt/ui',
+    '@nuxt/content',
     '@nuxthub/core',
-    '@vueuse/nuxt',
-    '@nuxt/content'
+    '@vueuse/nuxt'
   ],
+
   css: ['~/assets/css/main.css'],
+
   hub: {
     database: true
+  },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
+  },
+  fonts: {
+    families: [
+      { name: 'Inter', provider: 'google' },
+      { name: 'JetBrains Mono', provider: 'google' }
+    ]
   },
   content: {
     build: {
