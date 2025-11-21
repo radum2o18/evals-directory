@@ -19,8 +19,8 @@ export default defineNuxtConfig({
     database: true
   },
   app: {
-    pageTransition: { name: 'page', mode: 'out-in' },
-    layoutTransition: { name: 'layout', mode: 'out-in' }
+    pageTransition: { name: 'page', mode: 'out-in', duration: 150 },
+    layoutTransition: { name: 'layout', mode: 'out-in', duration: 150 }
   },
   fonts: {
     families: [

@@ -71,16 +71,13 @@ useSeoMeta({
 
 <template>
   <UMain>
-    <UContainer class="py-16">
-      <!-- Hero Section -->
-      <div class="max-w-3xl mx-auto text-center mb-16">
-        <div class="inline-flex flex-col items-stretch gap-4 mx-auto w-max">
-          <h1 class="text-5xl md:text-6xl font-bold">
-            <span class="font-mono">evals.directory</span>
-          </h1>
-          <p class="text-lg md:text-2xl text-muted">
-            The npm registry for AI evaluation patterns.
-          </p>
+    <UPageHero
+      title="Find the perfect evaluation pattern"
+      description="Discover and explore AI evaluation patterns across multiple frameworks. Search through a curated collection of evals for your next project."
+      orientation="vertical"
+    >
+      <template #body>
+        <div class="max-w-2xl mx-auto w-full">
           <UInput
             v-model="heroQuery"
             readonly
@@ -91,7 +88,10 @@ useSeoMeta({
             @click="openSearch"
           />
         </div>
-      </div>
+      </template>
+    </UPageHero>
+
+    <UContainer class="py-16">
 
       <!-- Recent Additions -->
       <div v-if="recentEvals.length" id="recent-evals">

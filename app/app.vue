@@ -52,10 +52,10 @@ const files = computed(() => {
 </template>
 
 <style>
-/* Page transitions - smooth fade with subtle scale */
+/* Page transitions - fast fade with subtle scale */
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-enter-from {
@@ -68,10 +68,10 @@ const files = computed(() => {
   transform: translateY(-4px);
 }
 
-/* Layout transitions - faster, minimal fade */
+/* Layout transitions - fast fade */
 .layout-enter-active,
 .layout-leave-active {
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .layout-enter-from,
