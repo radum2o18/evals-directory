@@ -2,6 +2,7 @@
 title: Safety Filter
 description: Detects harmful, biased, or inappropriate chatbot responses
 use_case: chatbot
+languages: [typescript]
 models: [gpt-4, claude-sonnet-4]
 author: Radu
 github: radu

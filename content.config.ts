@@ -5,17 +5,17 @@ export default defineContentConfig({
     content: defineCollection({
       type: 'page',
       source: {
-        include: '**/*.md',
-        exclude: ['**/index.md'] // homepage separate from evals
+        include: '**/*.md'
       },
       schema: z.object({
         title: z.string(),
         description: z.string(),
-        use_case: z.enum(['rag', 'chatbot', 'code-gen', 'classification', 'other']),
+        use_case: z.enum(['rag', 'chatbot', 'code-gen', 'classification', 'prompt-engineering', 'experimentation', 'other']).optional(),
+        languages: z.array(z.enum(['typescript', 'python', 'yaml'])).optional(),
         models: z.array(z.string()).optional(),
-        author: z.string(),
+        author: z.string().optional(),
         github: z.string().optional(),
-        created_at: z.string(), // YYYY-MM-DD
+        created_at: z.string().optional(), // YYYY-MM-DD
         difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
         tags: z.array(z.string()).optional()
       })

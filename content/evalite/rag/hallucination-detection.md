@@ -2,6 +2,7 @@
 title: RAG Hallucination Detection
 description: Tests if RAG responses stick to provided context without hallucinating
 use_case: rag
+languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
 author: Radu
 github: radu

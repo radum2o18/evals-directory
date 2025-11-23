@@ -24,6 +24,9 @@
   },
   "packageManager": "pnpm@10.23.0",
   "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.3",
+    "@iconify-json/lucide": "^1.2.74",
+    "@iconify-json/simple-icons": "^1.2.59",
     "@nuxthub/core": "^0.9.0",
     "@vueuse/nuxt": "^14.0.0",
     "wrangler": "^4.49.0"

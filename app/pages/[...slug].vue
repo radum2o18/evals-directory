@@ -51,6 +51,12 @@ const communityLinks = computed(() => [{
   to: 'https://github.com/yourusername/evals-directory',
   target: '_blank'
 }])
+
+const isFrameworkIndex = computed(() => {
+  const pathSegments = route.path.split('/').filter(Boolean)
+  // Check if this is a framework index page (e.g., /braintrust, /evalite)
+  return pathSegments.length === 1 && framework.value !== undefined
+})
 </script>
 
 <template>
@@ -66,30 +72,26 @@ const communityLinks = computed(() => [{
     </UPageHeader>
 
     <UPageBody>
-      <div class="not-prose mb-6 text-sm space-y-3">
-        <!-- Context line -->
-        <div class="flex flex-wrap items-center gap-3 text-muted">
-          <span v-if="framework" class="inline-flex items-center gap-1">
-            <UIcon :name="framework.icon" class="w-4 h-4" />
-            <span>{{ framework.name }}</span>
-          </span>
-          <span v-if="page.use_case" class="inline-flex items-center gap-1">
-            <span class="font-semibold">Use case:</span>
-            <span class="capitalize">{{ page.use_case }}</span>
-          </span>
+      <div v-if="!isFrameworkIndex" class="not-prose mb-6 text-sm space-y-3">
+        <!-- Use case -->
+        <div v-if="page.use_case" class="flex flex-wrap items-center gap-2">
+          <span class="text-xs uppercase tracking-wide text-muted">Use case:</span>
+          <UBadge color="primary" variant="subtle" size="sm">
+            {{ page.use_case }}
+          </UBadge>
         </div>
 
         <!-- Meta row -->
         <div class="flex flex-wrap items-center gap-4 text-muted">
-          <div v-if="page.models" class="flex items-center gap-1">
+          <div v-if="page.models" class="flex items-center gap-2">
             <UIcon name="i-heroicons-sparkles" class="w-4 h-4" />
             <span>{{ page.models.join(', ') }}</span>
           </div>
-          <div v-if="page.author" class="flex items-center gap-1">
+          <div v-if="page.author" class="flex items-center gap-2">
             <UIcon name="i-heroicons-user" class="w-4 h-4" />
             <span>{{ page.author }}</span>
           </div>
-          <div v-if="page.created_at" class="flex items-center gap-1">
+          <div v-if="page.created_at" class="flex items-center gap-2">
             <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
             <span>{{ new Date(page.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) }}</span>
           </div>
@@ -97,7 +99,7 @@ const communityLinks = computed(() => [{
 
         <!-- Tags row -->
         <div v-if="displayTags.length" class="flex flex-wrap items-center gap-2">
-          <span class="text-xs uppercase tracking-wide text-muted">Tags</span>
+          <span class="text-xs uppercase tracking-wide text-muted">Tags:</span>
           <div class="flex flex-wrap gap-2">
             <UBadge
               v-for="tag in displayTags"

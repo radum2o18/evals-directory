@@ -7,6 +7,7 @@ interface EvalItem {
   title: string
   description: string
   use_case?: string
+  languages?: string[]
   author?: string
   created_at?: string
 }
@@ -104,7 +105,7 @@ useSeoMeta({
             class="block"
           >
             <UCard>
-              <div class="flex items-center gap-2 mb-3">
+              <div class="flex items-center gap-2 mb-3 flex-wrap">
                 <UBadge
                   v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
                   :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
@@ -114,6 +115,15 @@ useSeoMeta({
                 </UBadge>
                 <UBadge v-if="evalItem.use_case" color="neutral" variant="subtle" size="xs">
                   {{ evalItem.use_case }}
+                </UBadge>
+                <UBadge
+                  v-for="lang in evalItem.languages"
+                  :key="lang"
+                  color="neutral"
+                  variant="outline"
+                  size="xs"
+                >
+                  {{ lang }}
                 </UBadge>
               </div>
               <h3 class="text-lg font-semibold mb-2">{{ evalItem.title }}</h3>
@@ -158,7 +168,7 @@ useSeoMeta({
             class="block"
           >
             <UCard>
-              <div class="flex items-center gap-2 mb-3">
+              <div class="flex items-center gap-2 mb-3 flex-wrap">
                 <UBadge
                   v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
                   :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
@@ -168,6 +178,15 @@ useSeoMeta({
                 </UBadge>
                 <UBadge v-if="evalItem.use_case" color="neutral" variant="subtle" size="xs">
                   {{ evalItem.use_case }}
+                </UBadge>
+                <UBadge
+                  v-for="lang in evalItem.languages"
+                  :key="lang"
+                  color="neutral"
+                  variant="outline"
+                  size="xs"
+                >
+                  {{ lang }}
                 </UBadge>
               </div>
               <h3 class="text-lg font-semibold mb-2">{{ evalItem.title }}</h3>
