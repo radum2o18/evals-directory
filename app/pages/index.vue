@@ -64,6 +64,16 @@ const openSearch = () => {
   ;(open as Ref<boolean>).value = true
 }
 
+// Helper to get language icon
+const getLanguageIcon = (lang: string) => {
+  const icons: Record<string, string> = {
+    typescript: 'i-simple-icons-typescript',
+    python: 'i-simple-icons-python',
+    yaml: 'i-heroicons-code-bracket'
+  }
+  return icons[lang.toLowerCase()] || 'i-heroicons-code-bracket'
+}
+
 useSeoMeta({
   title: 'Evals Directory',
   description: 'The npm registry for AI evaluation patterns'
@@ -104,16 +114,21 @@ useSeoMeta({
             :to="evalItem.path"
             class="block"
           >
-            <UCard>
-              <div class="flex items-center gap-2 mb-3 flex-wrap">
+            <UCard :ui="{ root: 'transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
+              <div class="flex items-center gap-2 mb-4 flex-wrap">
                 <UBadge
                   v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
                   :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
-                  size="xs"
+                  size="sm"
                 >
                   {{ getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.name }}
                 </UBadge>
-                <UBadge v-if="evalItem.use_case" color="neutral" variant="subtle" size="xs">
+                <UBadge
+                  v-if="evalItem.use_case"
+                  color="neutral"
+                  variant="soft"
+                  size="sm"
+                >
                   {{ evalItem.use_case }}
                 </UBadge>
                 <UBadge
@@ -121,7 +136,8 @@ useSeoMeta({
                   :key="lang"
                   color="neutral"
                   variant="outline"
-                  size="xs"
+                  size="sm"
+                  :icon="getLanguageIcon(lang)"
                 >
                   {{ lang }}
                 </UBadge>
@@ -167,16 +183,20 @@ useSeoMeta({
             :to="evalItem.path"
             class="block"
           >
-            <UCard>
-              <div class="flex items-center gap-2 mb-3 flex-wrap">
+            <UCard :ui="{ root: 'transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
+              <div class="flex items-center gap-2 mb-4 flex-wrap">
                 <UBadge
-                  v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
-                  :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
-                  size="xs"
+                  :color="section.framework.color"
+                  size="sm"
                 >
-                  {{ getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.name }}
+                  {{ section.framework.name }}
                 </UBadge>
-                <UBadge v-if="evalItem.use_case" color="neutral" variant="subtle" size="xs">
+                <UBadge
+                  v-if="evalItem.use_case"
+                  color="neutral"
+                  variant="soft"
+                  size="sm"
+                >
                   {{ evalItem.use_case }}
                 </UBadge>
                 <UBadge
@@ -184,7 +204,8 @@ useSeoMeta({
                   :key="lang"
                   color="neutral"
                   variant="outline"
-                  size="xs"
+                  size="sm"
+                  :icon="getLanguageIcon(lang)"
                 >
                   {{ lang }}
                 </UBadge>

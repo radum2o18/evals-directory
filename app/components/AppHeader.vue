@@ -1,28 +1,31 @@
 <script setup lang="ts">
-import type { NavigationMenuItem, ContentNavigationItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
-const navigation = inject<Ref<ContentNavigationItem[] | undefined>>('navigation')
+const { frameworks } = useFrameworks()
 
 const showSearch = computed(() => route.path !== '/')
 
-// Convert Nuxt Content navigation to NavigationMenu items
-const navItems = computed<NavigationMenuItem[]>(() => {
-  if (!navigation?.value) return []
-
-  return navigation.value.map((item) => ({
-    label: item.title || '',
-    to: item.path || '',
-    icon: item.icon,
-    active: route.path.startsWith(item.path || ''),
-    children: item.children?.map((child: ContentNavigationItem) => ({
-      label: child.title || '',
-      to: child.path || '',
-      icon: child.icon,
-      active: route.path === child.path
+// Custom navigation items
+const navItems = computed<NavigationMenuItem[]>(() => [
+  {
+    label: 'Frameworks',
+    icon: 'i-heroicons-cube',
+    active: route.path !== '/' && route.path !== '/about' && !route.path.startsWith('/about'),
+    children: Object.values(frameworks).map((fw) => ({
+      label: fw.name,
+      to: `/${fw.slug}`,
+      icon: fw.icon,
+      active: route.path.startsWith(`/${fw.slug}`)
     }))
-  }))
-})
+  },
+  {
+    label: 'About',
+    to: '/about',
+    icon: 'i-heroicons-information-circle',
+    active: route.path === '/about'
+  }
+])
 </script>
 
 <template>

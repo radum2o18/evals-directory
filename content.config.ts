@@ -15,7 +15,7 @@ export default defineContentConfig({
         models: z.array(z.string()).optional(),
         author: z.string().optional(),
         github: z.string().optional(),
-        created_at: z.string().optional(), // YYYY-MM-DD
+        created_at: z.string().optional(),
         difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
         tags: z.array(z.string()).optional()
       })
