@@ -21,6 +21,8 @@ Critical for code generation systems where correctness is paramount. Ensures cod
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -210,6 +212,8 @@ Write clean, working TypeScript code. Include proper types. Respond with ONLY th
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

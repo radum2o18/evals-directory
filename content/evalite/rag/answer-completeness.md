@@ -21,6 +21,8 @@ Essential for complex queries requiring comprehensive answers, such as research 
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -229,6 +231,8 @@ evalite("Answer Completeness", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

@@ -21,6 +21,8 @@ Critical for real-time chat applications where user experience depends on percei
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -150,6 +152,8 @@ evalite("Latency Benchmark", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

@@ -21,6 +21,8 @@ Critical for RAG efficiency and answer quality. Irrelevant context wastes tokens
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -233,6 +235,8 @@ evalite("Context Relevance", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

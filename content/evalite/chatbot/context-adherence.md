@@ -21,6 +21,8 @@ Critical for customer support bots, documentation assistants, or any chatbot wor
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -129,6 +131,8 @@ evalite("Context Adherence", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

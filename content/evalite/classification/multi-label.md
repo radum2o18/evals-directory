@@ -21,6 +21,8 @@ Essential for content tagging, skill extraction, multi-topic classification, and
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -250,6 +252,8 @@ Possible tags: python, javascript, typescript, react, vue, angular, nodejs, aws,
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

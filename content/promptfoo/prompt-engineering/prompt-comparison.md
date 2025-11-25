@@ -23,6 +23,8 @@ Essential for prompt engineering workflows. Quickly iterate on prompt designs by
 
 ### promptfooconfig.yaml
 
+::code-collapse
+
 ```yaml
 description: "Prompt comparison for customer support bot"
 
@@ -114,6 +116,8 @@ defaultTest:
     - type: latency
       threshold: 5000  # Max 5s response time
 ```
+
+::
 
 ### Running the Eval
 

@@ -21,6 +21,8 @@ Foundation metric for any code generation system. Invalid syntax makes code unus
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -199,6 +201,8 @@ evalite("Syntax Validation", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

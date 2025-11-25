@@ -23,6 +23,8 @@ Essential for safely deploying prompt changes, model upgrades, or configuration 
 
 ### TypeScript
 
+::code-collapse
+
 ```typescript
 import { initLogger, wrapOpenAI } from "braintrust";
 import { OpenAI } from "openai";
@@ -224,7 +226,11 @@ async function analyzeExperiment() {
 }
 ```
 
+::
+
 ### Python
+
+::code-collapse
 
 ```python
 from braintrust import init_logger, wrap_openai
@@ -400,6 +406,8 @@ if __name__ == "__main__":
 
     print("\nView detailed analysis at: https://www.braintrust.dev")
 ```
+
+::
 
 ## Metrics Tracked
 

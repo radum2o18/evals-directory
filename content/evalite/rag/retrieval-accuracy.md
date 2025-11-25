@@ -21,6 +21,8 @@ Critical for RAG systems where retrieval quality directly impacts answer quality
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import { embed } from "@ai-sdk/openai";
@@ -213,6 +215,8 @@ evalite("Retrieval Accuracy", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

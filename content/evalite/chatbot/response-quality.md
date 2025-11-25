@@ -21,6 +21,8 @@ Essential for any customer-facing chatbot where user experience and satisfaction
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -178,6 +180,8 @@ evalite("Response Quality", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 

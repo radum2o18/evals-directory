@@ -23,6 +23,8 @@ Essential for chatbots and assistants that maintain context across multiple exch
 
 ### TypeScript
 
+::code-collapse
+
 ```typescript
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
@@ -205,7 +207,11 @@ const evalResults = await evaluate(
 console.log("Conversation Evaluation:", evalResults);
 ```
 
+::
+
 ### Python
+
+::code-collapse
 
 ```python
 from langchain_anthropic import ChatAnthropic
@@ -385,6 +391,8 @@ eval_results = evaluate(
 
 print("Conversation Evaluation:", eval_results)
 ```
+
+::
 
 ## Metrics Tracked
 

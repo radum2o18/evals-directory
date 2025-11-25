@@ -23,6 +23,8 @@ Essential for optimizing RAG systems. Compare different configurations (embeddin
 
 ### TypeScript
 
+::code-collapse
+
 ```typescript
 import { Eval } from "braintrust";
 import { OpenAI } from "openai";
@@ -192,7 +194,11 @@ for (const experiment of experiments) {
 console.log("View results at: https://www.braintrust.dev");
 ```
 
+::
+
 ### Python
+
+::code-collapse
 
 ```python
 from braintrust import Eval
@@ -344,6 +350,8 @@ for experiment in experiments:
 
 print("View results at: https://www.braintrust.dev")
 ```
+
+::
 
 ## Metrics Tracked
 

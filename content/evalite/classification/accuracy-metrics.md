@@ -21,6 +21,8 @@ Foundation metrics for any classification task including sentiment analysis, int
 
 ## Implementation
 
+::code-collapse
+
 ```typescript
 import { evalite } from "evalite";
 import Anthropic from "@anthropic-ai/sdk";
@@ -187,6 +189,8 @@ evalite("Classification Accuracy", {
   ]
 });
 ```
+
+::
 
 ## Metrics Tracked
 
