@@ -18,7 +18,7 @@ TypeScript
   ---
   title: Homepage
   icon: i-heroicons-globe-alt
-  to: https://evalite.dev
+  to: https://v1.evalite.dev/
   target: _blank
   ---
   ::
@@ -27,7 +27,7 @@ TypeScript
   ---
   title: Documentation
   icon: i-heroicons-book-open
-  to: https://evalite.dev/docs
+  to: https://v1.evalite.dev/guides/quickstart/
   target: _blank
   ---
   ::
@@ -45,7 +45,7 @@ TypeScript
   ---
   title: NPM
   icon: i-simple-icons-npm
-  to: https://www.npmjs.com/package/@evalite/core
+  to: https://www.npmjs.com/package/evalite
   target: _blank
   ---
   ::

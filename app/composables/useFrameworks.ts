@@ -22,10 +22,10 @@ export const useFrameworks = () => {
       color: 'primary',
       icon: 'i-simple-icons-typescript',
       description: 'TypeScript-native eval framework built on Vitest',
-      website: 'https://evalite.dev',
+      website: 'https://v1.evalite.dev/',
       fileExtension: '.eval.ts',
       status: 'active',
-      docsUrl: 'https://evalite.dev/docs'
+      docsUrl: 'https://v1.evalite.dev/guides/quickstart/'
     },
     promptfoo: {
       name: 'Promptfoo',

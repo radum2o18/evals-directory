@@ -39,7 +39,7 @@ const handleError = () => clearError({ redirect: '/' })
           </div>
 
           <!-- Actions -->
-          <div class="flex flex-wrap justify-center gap-4">
+          <div class="flex justify-center">
             <UButton
               color="primary"
               size="lg"
@@ -47,15 +47,6 @@ const handleError = () => clearError({ redirect: '/' })
               @click="handleError"
             >
               Go home
-            </UButton>
-            <UButton
-              color="neutral"
-              variant="outline"
-              size="lg"
-              icon="i-heroicons-arrow-left"
-              @click="$router.back()"
-            >
-              Go back
             </UButton>
           </div>
         </div>
