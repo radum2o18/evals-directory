@@ -4,9 +4,8 @@ description: Ensures chatbot responses stay within provided context and don't ha
 use_case: chatbot
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-20
 difficulty: intermediate
 tags: [chatbot, context, hallucination, grounding]
 ---

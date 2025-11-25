@@ -4,9 +4,8 @@ description: Measures how well the retrieval system finds relevant documents for
 use_case: rag
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-16
 difficulty: intermediate
 tags: [rag, retrieval, precision, recall, ranking]
 ---

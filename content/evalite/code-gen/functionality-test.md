@@ -4,9 +4,8 @@ description: Verifies that generated code executes correctly and produces expect
 use_case: code-gen
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, codellama]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-22
 difficulty: intermediate
 tags: [code-gen, testing, execution, correctness, unit-tests]
 ---

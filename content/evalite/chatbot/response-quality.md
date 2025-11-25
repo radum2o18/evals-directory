@@ -4,9 +4,8 @@ description: Evaluates chatbot response helpfulness, coherence, and user satisfa
 use_case: chatbot
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-19
 difficulty: intermediate
 tags: [chatbot, quality, helpfulness, coherence]
 ---

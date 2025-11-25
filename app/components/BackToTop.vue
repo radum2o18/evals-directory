@@ -33,4 +33,3 @@ const scrollToTop = () => {
     </div>
   </Transition>
 </template>
-

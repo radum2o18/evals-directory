@@ -4,9 +4,8 @@ description: Evaluates models that assign multiple labels per instance
 use_case: classification
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-23
 difficulty: intermediate
 tags: [classification, multi-label, tagging, categorization]
 ---

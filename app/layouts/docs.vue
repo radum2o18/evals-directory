@@ -26,7 +26,6 @@ const filteredNavigation = computed(() => {
   const term = searchTerm.value.trim().toLowerCase()
   let items = navigation.value
 
-  // Move "about" to the bottom when not filtering
   if (!term) {
     const aboutIndex = items.findIndex(item => 
       item.path === '/about' || item.title?.toLowerCase() === 'about'
@@ -57,8 +56,7 @@ const filteredNavigation = computed(() => {
       .filter(Boolean) as ContentNavigationItem[]
 
   const filtered = filterTree(items)
-  
-  // Move "about" to the bottom when filtering
+
   if (term) {
     const aboutIndex = filtered.findIndex(item => 
       item.path === '/about' || item.title?.toLowerCase() === 'about'

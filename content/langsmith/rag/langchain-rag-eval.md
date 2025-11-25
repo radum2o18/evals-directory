@@ -4,9 +4,8 @@ description: End-to-end evaluation of LangChain RAG pipelines with built-in eval
 use_case: rag
 languages: [typescript, python]
 models: [gpt-4, claude-sonnet-4]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-18
 difficulty: intermediate
 tags: [langchain, rag, langsmith, evaluation, qa]
 ---

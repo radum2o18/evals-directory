@@ -11,10 +11,10 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 
 ## Supported Frameworks
 
-- **Evalite** - TypeScript-native eval framework (Active)
-- **Promptfoo** - CLI-first evaluation with YAML configs (Coming Soon)
-- **LangSmith** - LangChain ecosystem evaluation platform (Coming Soon)
-- **Braintrust** - Enterprise AI evaluation and monitoring (Coming Soon)
+- **Evalite** - TypeScript-native eval framework
+- **Braintrust** - Enterprise AI evaluation and monitoring
+- **LangSmith** - LangChain ecosystem evaluation platform
+- **Promptfoo** - CLI-first evaluation with YAML configs
 
 ## Quick Start
 
@@ -76,9 +76,8 @@ title: Your Eval Title
 description: Brief description of what this eval tests
 use_case: rag | chatbot | code-gen | classification | other
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-author: YourName
 github: yourgithubusername
-created_at: 2025-01-15  # YYYY-MM-DD format
+created_at: 2025-11-25  # YYYY-MM-DD format
 difficulty: beginner | intermediate | advanced
 tags: [tag1, tag2, tag3]
 ---

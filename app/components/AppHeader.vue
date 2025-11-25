@@ -4,7 +4,6 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const { frameworks } = useFrameworks()
 
-// Custom navigation items with descriptions for better UX
 const navItems = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Frameworks',
@@ -25,7 +24,6 @@ const navItems = computed<NavigationMenuItem[]>(() => [
   }
 ])
 
-// Mobile menu items (vertical layout)
 const mobileNavItems = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Frameworks',
@@ -99,5 +97,4 @@ const mobileNavItems = computed<NavigationMenuItem[]>(() => [
     </template>
   </UHeader>
 </template>
-
 

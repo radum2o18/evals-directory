@@ -12,7 +12,6 @@ interface EvalItem {
   created_at?: string
 }
 
-// Fetch all evals
 const { data: allEvals } = await useAsyncData<EvalItem[]>(
   'all-evals',
   async () => {
@@ -22,9 +21,6 @@ const { data: allEvals } = await useAsyncData<EvalItem[]>(
   { default: () => [] }
 )
 
-const heroQuery = ref('')
-
-// Recent evals
 const recentEvals = computed(() => {
   if (!allEvals.value) return []
 
@@ -59,12 +55,9 @@ const frameworkSections = computed(() => {
 })
 
 const openSearch = () => {
-  // useContentSearch exposes `open` as a ref controlling visibility
-  // setting it to true opens the command palette
-  ;(open as Ref<boolean>).value = true
+  (open as Ref<boolean>).value = true
 }
 
-// Helper to get language icon
 const getLanguageIcon = (lang: string) => {
   const icons: Record<string, string> = {
     typescript: 'i-simple-icons-typescript',
@@ -83,7 +76,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-// JSON-LD Structured Data
 useHead({
   script: [
     {
@@ -115,7 +107,6 @@ useHead({
       <template #body>
         <div class="max-w-2xl mx-auto w-full">
           <UInput
-            v-model="heroQuery"
             readonly
             size="xl"
             class="cursor-pointer w-full"
@@ -128,8 +119,6 @@ useHead({
     </UPageHero>
 
     <UContainer class="py-16">
-
-      <!-- Loading State -->
       <div v-if="!allEvals" id="loading-state">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -149,7 +138,6 @@ useHead({
         </div>
       </div>
 
-      <!-- Empty State -->
       <div v-else-if="allEvals && recentEvals.length === 0" id="empty-state">
         <UEmpty
           icon="i-heroicons-beaker"
@@ -164,7 +152,6 @@ useHead({
         />
       </div>
 
-      <!-- Recent Additions -->
       <div v-else-if="recentEvals.length" id="recent-evals">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -209,7 +196,6 @@ useHead({
         </div>
       </div>
 
-      <!-- Framework Sections -->
       <div
         v-for="section in frameworkSections"
         :key="section.framework.slug"
@@ -279,4 +265,3 @@ useHead({
     </UContainer>
   </UMain>
 </template>
-

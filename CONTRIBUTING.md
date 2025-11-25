@@ -44,9 +44,8 @@ description: One-sentence description of what this eval does
 use_case: chatbot | rag | code-gen | classification | prompt-engineering | experimentation
 languages: [typescript, python, yaml]  # What language examples you provide
 models: [gpt-4, claude-sonnet-4]  # Models tested
-author: Your Name
-github: your-github-username
-created_at: YYYY-MM-DD
+github: yourgithubusername  # Your GitHub username (required)
+created_at: 2025-11-25
 difficulty: beginner | intermediate | advanced
 tags: [relevant, tags, here]
 ---

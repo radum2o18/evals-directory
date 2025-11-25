@@ -4,9 +4,8 @@ description: Run controlled A/B tests and gradual rollouts with production monit
 use_case: experimentation
 languages: [typescript, python]
 models: [gpt-4, claude-sonnet-4]
-author: Radu
-github: radu
-created_at: 2025-01-20
+github: radum2o18
+created_at: 2025-11-21
 difficulty: advanced
 tags: [braintrust, ab-testing, experimentation, rollout, production]
 ---

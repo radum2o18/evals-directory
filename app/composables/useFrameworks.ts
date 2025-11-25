@@ -72,18 +72,8 @@ export const useFrameworks = () => {
     return frameworks[slug]
   }
 
-  const activeFrameworks = computed(() =>
-    Object.values(frameworks).filter(f => f.status === 'active')
-  )
-
-  const comingSoonFrameworks = computed(() =>
-    Object.values(frameworks).filter(f => f.status === 'coming-soon')
-  )
-
   return {
     frameworks,
-    getFrameworkBySlug,
-    activeFrameworks,
-    comingSoonFrameworks
+    getFrameworkBySlug
   }
 }

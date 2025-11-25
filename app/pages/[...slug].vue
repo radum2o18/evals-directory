@@ -15,11 +15,13 @@ const { data: page } = await useAsyncData(route.path, () =>
   queryCollection('content').path(route.path).first()
 )
 
+const githubUsername = computed(() => page.value?.github as string | undefined)
+const { user: githubUser } = useGitHubUser(githubUsername)
+
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
-// SEO Meta
 const pageTitle = computed(() => `${page.value?.title} | Evals Directory`)
 const framework = computed(() => {
   const slug = route.path.split('/')[1] || ''
@@ -35,7 +37,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-// JSON-LD Structured Data for articles
 useHead({
   script: [
     {
@@ -45,9 +46,10 @@ useHead({
         '@type': 'Article',
         headline: page.value?.title,
         description: page.value?.description,
-        author: page.value?.author ? {
+        author: page.value?.github ? {
           '@type': 'Person',
-          name: page.value.author
+          name: page.value.github,
+          url: `https://github.com/${page.value.github}`
         } : undefined,
         datePublished: page.value?.created_at,
         publisher: {
@@ -90,7 +92,6 @@ const communityLinks = computed(() => [{
 
 const isFrameworkIndex = computed(() => {
   const pathSegments = route.path.split('/').filter(Boolean)
-  // Check if this is a framework index page (e.g., /braintrust, /evalite)
   return pathSegments.length === 1 && framework.value !== undefined
 })
 </script>
@@ -109,7 +110,6 @@ const isFrameworkIndex = computed(() => {
 
     <UPageBody>
       <div v-if="!isFrameworkIndex" class="not-prose mb-6 text-sm space-y-3">
-        <!-- Use case -->
         <div v-if="page.use_case" class="flex flex-wrap items-center gap-2">
           <span class="text-xs uppercase tracking-wide text-muted">Use case:</span>
           <UBadge color="primary" variant="subtle" size="sm">
@@ -117,23 +117,27 @@ const isFrameworkIndex = computed(() => {
           </UBadge>
         </div>
 
-        <!-- Meta row -->
         <div class="flex flex-wrap items-center gap-4 text-muted">
           <div v-if="page.models" class="flex items-center gap-2">
             <UIcon name="i-heroicons-sparkles" class="w-4 h-4" />
             <span>{{ page.models.join(', ') }}</span>
           </div>
-          <div v-if="page.author" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-user" class="w-4 h-4" />
-            <span>{{ page.author }}</span>
-          </div>
+
+          <UUser
+            v-if="githubUser"
+            :name="githubUser.login"
+            :avatar="{ src: githubUser.avatar_url, alt: githubUser.login }"
+            :to="githubUser.html_url"
+            target="_blank"
+            size="xs"
+          />
+
           <div v-if="page.created_at" class="flex items-center gap-2">
             <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
             <span>{{ new Date(page.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) }}</span>
           </div>
         </div>
 
-        <!-- Tags row -->
         <div v-if="displayTags.length" class="flex flex-wrap items-center gap-2">
           <span class="text-xs uppercase tracking-wide text-muted">Tags:</span>
           <div class="flex flex-wrap gap-2">
@@ -167,5 +171,3 @@ const isFrameworkIndex = computed(() => {
     </template>
   </UPage>
 </template>
-
-
