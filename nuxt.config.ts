@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/hints',
     '@nuxt/image',
     '@nuxt/ui',
-    '@nuxtjs/sitemap', // Must be before @nuxt/content
+    '@nuxtjs/sitemap',
     'nuxt-og-image',
     '@nuxt/content',
     '@nuxthub/core',
@@ -21,13 +21,11 @@ export default defineNuxtConfig({
     database: true
   },
 
-  // Reduced transition duration for better INP (was 150ms, causing 206ms presentation delay)
   app: {
     pageTransition: { name: 'page', mode: 'out-in', duration: 100 },
     layoutTransition: { name: 'layout', mode: 'out-in', duration: 100 }
   },
 
-  // Font configuration with preload for faster LCP
   fonts: {
     families: [
       { name: 'DM Sans', provider: 'google', preload: true, weights: [400, 500, 600, 700] },
@@ -35,20 +33,29 @@ export default defineNuxtConfig({
     ]
   },
 
-  // Sitemap configuration
   site: {
     url: 'https://evals.directory'
   },
 
   sitemap: {
     autoLastmod: true,
-    excludeAppSources: ['nuxt:pages'] // Let content module handle pages
+    excludeAppSources: ['nuxt:pages']
   },
 
-  // OG Image configuration
   ogImage: {
+    zeroRuntime: false,
     defaults: {
-      component: 'OgImageDefault'
+      component: 'OgImageDefault',
+      renderer: 'satori'
+    },
+    runtimeCacheStorage: false,
+    compatibility: {
+      prerender: {
+        chromium: false
+      },
+      runtime: {
+        chromium: false
+      }
     }
   },
 
