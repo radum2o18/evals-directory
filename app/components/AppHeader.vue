@@ -46,7 +46,7 @@ const navItems = computed<NavigationMenuItem[]>(() => [
 
       <UTooltip text="Submit an eval">
         <UButton
-          to="https://github.com/yourusername/evals-directory"
+          to="https://github.com/radum2o18/evals-directory"
           target="_blank"
           icon="i-heroicons-plus"
           color="neutral"
@@ -56,7 +56,7 @@ const navItems = computed<NavigationMenuItem[]>(() => [
 
       <UColorModeButton />
        <UButton
-        to="https://github.com/yourusername/evals-directory"
+        to="https://github.com/radum2o18/evals-directory"
         target="_blank"
         icon="i-simple-icons-github"
         color="neutral"

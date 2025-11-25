@@ -20,7 +20,7 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/evals-directory
+git clone https://github.com/radum2o18/evals-directory
 cd evals-directory
 
 # Install dependencies
@@ -43,7 +43,7 @@ Thank you for your interest in contributing! This guide will help you submit you
 First, fork the repository on GitHub, then:
 
 ```bash
-git clone https://github.com/yourusername/evals-directory
+git clone https://github.com/radum2o18/evals-directory
 cd evals-directory
 ```
 

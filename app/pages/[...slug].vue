@@ -43,12 +43,12 @@ const { data: surround } = await useAsyncData(`${route.path}-surround`, () =>
 const communityLinks = computed(() => [{
   icon: 'i-lucide-file-pen',
   label: 'Edit this page',
-  to: `https://github.com/yourusername/evals-directory/edit/main/content${page.value?.path}.md`,
+  to: `https://github.com/radum2o18/evals-directory/edit/main/content${page.value?.path}.md`,
   target: '_blank'
 }, {
   icon: 'i-lucide-star',
   label: 'Star on GitHub',
-  to: 'https://github.com/yourusername/evals-directory',
+  to: 'https://github.com/radum2o18/evals-directory',
   target: '_blank'
 }])
 

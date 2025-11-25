@@ -127,7 +127,7 @@ Describe the real-world scenario where this eval is useful.
 
 ```bash
 # Fork the repo on GitHub, then:
-git clone https://github.com/YOUR-USERNAME/evals-directory
+git clone https://github.com/radum2o18/evals-directory
 cd evals-directory
 
 # Create a branch

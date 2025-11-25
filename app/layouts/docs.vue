@@ -24,8 +24,19 @@ const filteredNavigation = computed(() => {
   }
 
   const term = searchTerm.value.trim().toLowerCase()
+  let items = navigation.value
+
+  // Move "about" to the bottom when not filtering
   if (!term) {
-    return navigation.value
+    const aboutIndex = items.findIndex(item => 
+      item.path === '/about' || item.title?.toLowerCase() === 'about'
+    )
+    if (aboutIndex !== -1) {
+      const aboutItem = items[aboutIndex]
+      if (aboutItem) {
+        items = [...items.filter((_, i) => i !== aboutIndex), aboutItem]
+      }
+    }
   }
 
   const matches = (item: ContentNavigationItem) => {
@@ -45,39 +56,52 @@ const filteredNavigation = computed(() => {
       })
       .filter(Boolean) as ContentNavigationItem[]
 
-  return filterTree(navigation.value)
+  const filtered = filterTree(items)
+  
+  // Move "about" to the bottom when filtering
+  if (term) {
+    const aboutIndex = filtered.findIndex(item => 
+      item.path === '/about' || item.title?.toLowerCase() === 'about'
+    )
+    if (aboutIndex !== -1) {
+      const aboutItem = filtered[aboutIndex]
+      if (aboutItem) {
+        return [...filtered.filter((_, i) => i !== aboutIndex), aboutItem]
+      }
+    }
+  }
+
+  return filtered
 })
 </script>
 
 <template>
-  <UMain>
-    <UContainer>
-      <UPage>
-        <template #left>
-          <UPageAside>
-            <div class="mb-3">
-              <UInput
-                ref="navFilter"
-                v-model="searchTerm"
-                variant="soft"
-                placeholder="Filter..."
-                class="group"
-              >
-                <template #trailing>
-                  <UKbd value="/" variant="subtle" class="ring-muted bg-transparent text-muted" />
-                </template>
-              </UInput>
-            </div>
-            <UContentNavigation
-              v-if="filteredNavigation.length"
-              :navigation="filteredNavigation"
-              highlight
-            />
-          </UPageAside>
-        </template>
+  <UContainer>
+    <UPage>
+      <template #left>
+        <UPageAside>
+          <div class="mb-3">
+            <UInput
+              ref="navFilter"
+              v-model="searchTerm"
+              variant="soft"
+              placeholder="Filter..."
+              class="group"
+            >
+              <template #trailing>
+                <UKbd value="/" variant="subtle" class="ring-muted bg-transparent text-muted" />
+              </template>
+            </UInput>
+          </div>
+          <UContentNavigation
+            v-if="filteredNavigation.length"
+            :navigation="filteredNavigation"
+            highlight
+          />
+        </UPageAside>
+      </template>
 
-        <slot />
-      </UPage>
-    </UContainer>
-  </UMain>
+      <slot />
+    </UPage>
+  </UContainer>
 </template>

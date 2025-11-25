@@ -44,7 +44,7 @@ This is an open-source project. Contributions are welcome!
 ---
 title: Contribute on GitHub
 icon: i-simple-icons-github
-to: https://github.com/yourusername/evals-directory
+to: https://github.com/radum2o18/evals-directory
 target: _blank
 ---
 ::

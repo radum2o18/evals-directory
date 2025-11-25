@@ -214,7 +214,7 @@ We leverage **Nuxt UI's Content components** that power their own documentation:
       <template #right>
         <UContentSearch :files="files" :navigation="navigation" />
         <UButton
-          to="https://github.com/yourusername/evals-directory"
+          to="https://github.com/radum2o18/evals-directory"
           target="_blank"
           icon="i-simple-icons-github"
           color="neutral"
