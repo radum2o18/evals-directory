@@ -35,17 +35,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-// Dynamic OG Image
-defineOgImage({
-  component: 'OgImageDefault',
-  props: {
-    title: page.value?.title,
-    description: page.value?.description,
-    framework: framework.value?.name,
-    useCase: page.value?.use_case
-  }
-})
-
 // JSON-LD Structured Data for articles
 useHead({
   script: [

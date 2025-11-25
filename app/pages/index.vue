@@ -83,15 +83,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-// OG Image for homepage
-defineOgImage({
-  component: 'OgImageDefault',
-  props: {
-    title: 'Evals Directory',
-    description: 'Find the perfect evaluation pattern for your AI application'
-  }
-})
-
 // JSON-LD Structured Data
 useHead({
   script: [

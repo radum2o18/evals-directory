@@ -1,3 +1,5 @@
+import { defineNuxtConfig } from "nuxt/config";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -9,7 +11,6 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/ui',
     '@nuxtjs/sitemap',
-    'nuxt-og-image',
     '@nuxt/content',
     '@nuxthub/core',
     '@vueuse/nuxt'
@@ -40,23 +41,6 @@ export default defineNuxtConfig({
   sitemap: {
     autoLastmod: true,
     excludeAppSources: ['nuxt:pages']
-  },
-
-  ogImage: {
-    zeroRuntime: false,
-    defaults: {
-      component: 'OgImageDefault',
-      renderer: 'satori'
-    },
-    runtimeCacheStorage: false,
-    compatibility: {
-      prerender: {
-        chromium: false
-      },
-      runtime: {
-        chromium: false
-      }
-    }
   },
 
   content: {
