@@ -27,9 +27,9 @@ const footerLinks: NavigationMenuItem[] = [
         icon="i-simple-icons-x"
         color="neutral"
         variant="ghost"
-        to="https://github.com/radum2o18/evals-directory"
+        to="https://x.com/radum2o18"
         target="_blank"
-        aria-label="X"
+        aria-label="Follow on X"
       />
       <UButton
         icon="i-simple-icons-github"
@@ -39,7 +39,6 @@ const footerLinks: NavigationMenuItem[] = [
         target="_blank"
         aria-label="GitHub"
       />
-
     </template>
   </UFooter>
 </template>

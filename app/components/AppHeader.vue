@@ -4,9 +4,7 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const { frameworks } = useFrameworks()
 
-const showSearch = computed(() => route.path !== '/')
-
-// Custom navigation items
+// Custom navigation items with descriptions for better UX
 const navItems = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Frameworks',
@@ -14,9 +12,9 @@ const navItems = computed<NavigationMenuItem[]>(() => [
     active: route.path !== '/' && route.path !== '/about' && !route.path.startsWith('/about'),
     children: Object.values(frameworks).map((fw) => ({
       label: fw.name,
+      description: fw.description,
       to: `/${fw.slug}`,
-      icon: fw.icon,
-      active: route.path.startsWith(`/${fw.slug}`)
+      icon: fw.icon
     }))
   },
   {
@@ -24,6 +22,25 @@ const navItems = computed<NavigationMenuItem[]>(() => [
     to: '/about',
     icon: 'i-heroicons-information-circle',
     active: route.path === '/about'
+  }
+])
+
+// Mobile menu items (vertical layout)
+const mobileNavItems = computed<NavigationMenuItem[]>(() => [
+  {
+    label: 'Frameworks',
+    icon: 'i-heroicons-cube',
+    defaultOpen: true,
+    children: Object.values(frameworks).map((fw) => ({
+      label: fw.name,
+      to: `/${fw.slug}`,
+      icon: fw.icon
+    }))
+  },
+  {
+    label: 'About',
+    to: '/about',
+    icon: 'i-heroicons-information-circle'
   }
 ])
 </script>
@@ -37,10 +54,15 @@ const navItems = computed<NavigationMenuItem[]>(() => [
       </NuxtLink>
     </template>
 
-    <UNavigationMenu v-if="navItems.length" :items="navItems" />
+    <UNavigationMenu
+      v-if="navItems.length"
+      :items="navItems"
+      arrow
+      content-orientation="vertical"
+    />
 
     <template #right>
-      <UTooltip v-if="showSearch" text="Search" :kbds="['meta', 'K']">
+      <UTooltip text="Search" :kbds="['meta', 'K']">
         <UContentSearchButton />
       </UTooltip>
 
@@ -51,23 +73,26 @@ const navItems = computed<NavigationMenuItem[]>(() => [
           icon="i-heroicons-plus"
           color="neutral"
           variant="ghost"
+          aria-label="Submit an eval"
         />
       </UTooltip>
 
       <UColorModeButton />
-       <UButton
+
+      <UButton
         to="https://github.com/radum2o18/evals-directory"
         target="_blank"
         icon="i-simple-icons-github"
         color="neutral"
         variant="ghost"
+        aria-label="GitHub"
       />
     </template>
 
     <template #body>
       <UNavigationMenu
-        v-if="navItems.length"
-        :items="navItems"
+        v-if="mobileNavItems.length"
+        :items="mobileNavItems"
         orientation="vertical"
         class="-mx-2.5"
       />

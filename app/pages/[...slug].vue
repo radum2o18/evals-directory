@@ -19,16 +19,63 @@ if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
+// SEO Meta
+const pageTitle = computed(() => `${page.value?.title} | Evals Directory`)
+const framework = computed(() => {
+  const slug = route.path.split('/')[1] || ''
+  return getFrameworkBySlug(slug)
+})
+
+useSeoMeta({
+  title: pageTitle,
+  description: () => page.value?.description,
+  ogTitle: pageTitle,
+  ogDescription: () => page.value?.description,
+  ogType: 'article',
+  twitterCard: 'summary_large_image'
+})
+
+// Dynamic OG Image
+defineOgImage({
+  component: 'OgImageDefault',
+  props: {
+    title: page.value?.title,
+    description: page.value?.description,
+    framework: framework.value?.name,
+    useCase: page.value?.use_case
+  }
+})
+
+// JSON-LD Structured Data for articles
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: page.value?.title,
+        description: page.value?.description,
+        author: page.value?.author ? {
+          '@type': 'Person',
+          name: page.value.author
+        } : undefined,
+        datePublished: page.value?.created_at,
+        publisher: {
+          '@type': 'Organization',
+          name: 'Evals Directory',
+          url: 'https://evals.directory'
+        }
+      })
+    }
+  ]
+})
+
 const breadcrumb = computed(() =>
   mapContentNavigation(
     findPageBreadcrumb(navigation?.value || [], page.value?.path as string, { indexAsChild: true })
   ).map(({ icon, ...link }) => link)
 )
-
-const framework = computed(() => {
-  const slug = route.path.split('/')[1] || ''
-  return getFrameworkBySlug(slug)
-})
 
 const displayTags = computed(() => {
   const value = page.value

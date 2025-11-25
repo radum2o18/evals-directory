@@ -1,44 +1,36 @@
 ---
 title: About
-description: A curated collection of LLM evaluation patterns, recipes, and examples across popular evaluation frameworks.
+description: A curated collection of LLM evaluation patterns across popular frameworks. Find production-ready examples to ship better AI faster.
 ---
 
-## Why This Exists
+# The Problem
 
-Evaluating LLM applications is hard. There are many frameworks, each with different approaches, APIs, and philosophies. Finding quality examples and patterns that work in production can be time-consuming.
+You're building an AI application. You know you need evals. But where do you start?
 
-This site aims to:
+Every framework has its own approach—different APIs, different philosophies, different trade-offs. The docs show basic examples, but finding patterns that actually work in production? That takes hours of digging through repos, blog posts, and Discord threads.
 
-- **Collect proven patterns** - Real evaluation code that works in production
-- **Compare frameworks** - Understand trade-offs between different tools
-- **Accelerate development** - Copy, adapt, and ship faster
-- **Share knowledge** - Learn from the community's experience
+# The Solution
 
-## What You'll Find
+**Evals Directory** is a curated collection of evaluation patterns that you can copy, adapt, and ship.
 
-Each framework section contains:
+No fluff. No theory. Just working code across the frameworks people actually use:
 
-- **Framework overview** - Deployment options, key features, and resources
-- **Evaluation recipes** - Ready-to-use patterns for common use cases
-- **Code examples** - Copy-paste code with explanations
+- **Braintrust** — Enterprise monitoring with experiment tracking
+- **Evalite** — TypeScript-native evals built on Vitest  
+- **LangSmith** — Deep LangChain integration with tracing
+- **Promptfoo** — CLI-first testing with YAML configs
 
-## Covered Use Cases
+Each pattern includes the full code, explains what it tests, and tells you when to use it.
 
-- **RAG** - Retrieval quality, hallucination detection, answer completeness
-- **Chatbot** - Response quality, safety, context adherence
-- **Code Generation** - Syntax validation, functionality testing, security scans
-- **Classification** - Accuracy metrics, multi-label evaluation
-- **Prompt Engineering** - A/B testing, prompt comparison
-- **Experimentation** - Experiment tracking, gradual rollouts
+# Use Cases
 
-## Contributing
+Whether you're evaluating RAG pipelines, chatbot responses, code generation, or running prompt experiments—there's a pattern for that.
 
-This is an open-source project. Contributions are welcome!
+Browse by framework or search for what you need. Find something useful? Ship it.
 
-- Submit new evaluation patterns
-- Improve existing examples
-- Add support for new frameworks
-- Fix bugs and typos
+# Open Source
+
+This project is community-driven. If you've built an eval worth sharing, or found a bug worth fixing, contributions are welcome.
 
 ::card
 ---
@@ -48,10 +40,4 @@ to: https://github.com/radum2o18/evals-directory
 target: _blank
 ---
 ::
-
-## Built With
-
-- [Nuxt](https://nuxt.com) - Vue framework
-- [Nuxt UI](https://ui.nuxt.com) - UI components
-- [Nuxt Content](https://content.nuxt.com) - Content management
 

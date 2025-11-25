@@ -75,8 +75,42 @@ const getLanguageIcon = (lang: string) => {
 }
 
 useSeoMeta({
-  title: 'Evals Directory',
-  description: 'The npm registry for AI evaluation patterns'
+  title: 'Evals Directory - Find the Perfect AI Evaluation Pattern',
+  description: 'Discover and explore AI evaluation patterns across multiple frameworks. Search through a curated collection of evals for RAG, chatbots, code generation, and more.',
+  ogTitle: 'Evals Directory',
+  ogDescription: 'Discover and explore AI evaluation patterns across multiple frameworks.',
+  ogType: 'website',
+  twitterCard: 'summary_large_image'
+})
+
+// OG Image for homepage
+defineOgImage({
+  component: 'OgImageDefault',
+  props: {
+    title: 'Evals Directory',
+    description: 'Find the perfect evaluation pattern for your AI application'
+  }
+})
+
+// JSON-LD Structured Data
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Evals Directory',
+        description: 'A curated collection of LLM evaluation patterns across popular evaluation frameworks',
+        url: 'https://evals.directory',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://evals.directory/?search={search_term_string}',
+          'query-input': 'required name=search_term_string'
+        }
+      })
+    }
+  ]
 })
 </script>
 
@@ -104,8 +138,43 @@ useSeoMeta({
 
     <UContainer class="py-16">
 
+      <!-- Loading State -->
+      <div v-if="!allEvals" id="loading-state">
+        <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <UCard v-for="i in 6" :key="i">
+            <div class="space-y-4">
+              <div class="flex gap-2">
+                <USkeleton class="h-5 w-16 rounded-full" />
+                <USkeleton class="h-5 w-20 rounded-full" />
+              </div>
+              <USkeleton class="h-6 w-3/4" />
+              <div class="space-y-2">
+                <USkeleton class="h-4 w-full" />
+                <USkeleton class="h-4 w-2/3" />
+              </div>
+            </div>
+          </UCard>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else-if="allEvals && recentEvals.length === 0" id="empty-state">
+        <UEmpty
+          icon="i-heroicons-beaker"
+          title="No evals yet"
+          description="Be the first to contribute an evaluation pattern to the directory."
+          :actions="[{
+            label: 'Contribute',
+            icon: 'i-heroicons-plus',
+            to: 'https://github.com/radum2o18/evals-directory',
+            target: '_blank'
+          }]"
+        />
+      </div>
+
       <!-- Recent Additions -->
-      <div v-if="recentEvals.length" id="recent-evals">
+      <div v-else-if="recentEvals.length" id="recent-evals">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <NuxtLink

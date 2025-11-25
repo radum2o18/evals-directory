@@ -30,13 +30,21 @@ const files = computed(() => {
 
 <template>
   <UApp>
+    <!-- Skip to content link for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-md focus:outline-none"
+    >
+      Skip to content
+    </a>
+
     <ClientOnly>
       <LazyUContentSearch
         v-model:search-term="searchTerm"
         :files="files"
         :navigation="navigation"
         shortcut="meta_k"
-          :color-mode="false"
+        :color-mode="false"
         :fuse="{ resultLimit: 42 }"
       />
     </ClientOnly>
@@ -46,37 +54,38 @@ const files = computed(() => {
     <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator color="var(--ui-primary)" />
     
-    <UMain>
+    <UMain id="main-content">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
     </UMain>
 
     <AppFooter />
+
+    <BackToTop />
   </UApp>
 </template>
 
 <style>
-/* Page transitions - fast fade with subtle scale */
+/* Page transitions - reduced to 100ms for better INP */
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(4px);
 }
 
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
 }
 
 /* Layout transitions - fast fade */
 .layout-enter-active,
 .layout-leave-active {
-  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .layout-enter-from,

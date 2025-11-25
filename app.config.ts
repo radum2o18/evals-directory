@@ -2,7 +2,7 @@ export default defineAppConfig({
   ui: {
     icons: ['heroicons', 'simple-icons', 'lucide'],
     colors: {
-      primary: 'neutral',
+      primary: 'emerald', // Accent color for CTAs and important elements
       secondary: 'neutral',
       neutral: 'neutral'
     },

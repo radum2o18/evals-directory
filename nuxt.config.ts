@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     '@nuxt/hints',
     '@nuxt/image',
     '@nuxt/ui',
+    '@nuxtjs/sitemap', // Must be before @nuxt/content
+    'nuxt-og-image',
     '@nuxt/content',
     '@nuxthub/core',
     '@vueuse/nuxt'
@@ -18,16 +20,38 @@ export default defineNuxtConfig({
   hub: {
     database: true
   },
+
+  // Reduced transition duration for better INP (was 150ms, causing 206ms presentation delay)
   app: {
-    pageTransition: { name: 'page', mode: 'out-in', duration: 150 },
-    layoutTransition: { name: 'layout', mode: 'out-in', duration: 150 }
+    pageTransition: { name: 'page', mode: 'out-in', duration: 100 },
+    layoutTransition: { name: 'layout', mode: 'out-in', duration: 100 }
   },
+
+  // Font configuration with preload for faster LCP
   fonts: {
     families: [
-      { name: 'Inter', provider: 'google' },
-      { name: 'JetBrains Mono', provider: 'google' }
+      { name: 'DM Sans', provider: 'google', preload: true, weights: [400, 500, 600, 700] },
+      { name: 'JetBrains Mono', provider: 'google', preload: true }
     ]
   },
+
+  // Sitemap configuration
+  site: {
+    url: 'https://evals.directory'
+  },
+
+  sitemap: {
+    autoLastmod: true,
+    excludeAppSources: ['nuxt:pages'] // Let content module handle pages
+  },
+
+  // OG Image configuration
+  ogImage: {
+    defaults: {
+      component: 'OgImageDefault'
+    }
+  },
+
   content: {
     build: {
       markdown: {
@@ -36,8 +60,8 @@ export default defineNuxtConfig({
             default: 'github-light',
             dark: 'github-dark'
           },
-          langs: ['python', 'yaml']
-        },
+          langs: ['python', 'yaml', 'typescript', 'javascript', 'json', 'bash']
+        }
       }
     }
   }
