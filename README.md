@@ -170,23 +170,10 @@ Choose the most appropriate category:
 - **classification**: Classification task metrics
 - **other**: Anything else
 
-### Review Process
-
-1. Automated checks run on PR
-2. Maintainer reviews content quality
-3. Feedback provided if changes needed
-4. Merge once approved
-
 ### Questions?
 
-Open an issue or reach out on [Discord/Twitter/etc].
+Open an issue or reach out on [X](https://x.com/Capn0bvious).
 
-## Tech Stack
-
-- [Nuxt 4](https://nuxt.com) - Vue framework
-- [Nuxt UI](https://ui.nuxt.com) - UI component library
-- [Nuxt Content](https://content.nuxt.com) - Content management
-- [NuxtHub](https://nuxthub.com) - Backend infrastructure
 
 ## License
 
