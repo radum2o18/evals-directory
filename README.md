@@ -4,10 +4,10 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 
 ## Features
 
-- 🔍 **Search & Discover**: Find evaluation patterns by framework, use case, or tags
+- 🔍 **Browse & Search**: Explore evaluation patterns by framework or use case
 - 📚 **Multi-Framework Support**: Patterns for Evalite, Promptfoo, LangSmith, Braintrust, and more
-- 🎯 **Use Case Categories**: RAG, chatbot, code generation, classification
 - 🚀 **Ready to Use**: Copy-paste code examples with working implementations
+- 🤝 **Community Driven**: Submit your own evals via GitHub PR
 
 ## Supported Frameworks
 
@@ -15,22 +15,6 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 - **Braintrust** - Enterprise AI evaluation and monitoring
 - **LangSmith** - LangChain ecosystem evaluation platform
 - **Promptfoo** - CLI-first evaluation with YAML configs
-
-## Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/radum2o18/evals-directory
-cd evals-directory
-
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-```
-
-Visit `http://localhost:3000` to explore the directory.
 
 ## Contributing
 
@@ -137,38 +121,6 @@ git push origin add-my-eval
 #### 7. Submit PR
 
 Then open a Pull Request on GitHub.
-
-### Guidelines
-
-#### Content Quality
-
-- **Clear**: Explain the eval purpose clearly
-- **Complete**: Include working code examples
-- **Tested**: Verify the code actually works
-- **Documented**: Add comments where helpful
-
-#### Code Standards
-
-- Use TypeScript for Evalite examples
-- Follow the existing code style
-- Include error handling where appropriate
-- Add meaningful variable names
-
-#### Naming
-
-- **File names**: kebab-case (e.g., `hallucination-detection.md`)
-- **Titles**: Title Case (e.g., "Hallucination Detection")
-- **Tags**: lowercase (e.g., `rag`, `hallucination`)
-
-#### Categories
-
-Choose the most appropriate category:
-
-- **rag**: Retrieval-Augmented Generation patterns
-- **chatbot**: Conversational AI evaluations
-- **code-gen**: Code generation quality checks
-- **classification**: Classification task metrics
-- **other**: Anything else
 
 ### Questions?
 
