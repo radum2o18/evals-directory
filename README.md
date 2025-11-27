@@ -7,7 +7,7 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 - 🔍 **Browse & Search**: Explore evaluation patterns by framework or use case
 - 📚 **Multi-Framework Support**: Patterns for Evalite, Promptfoo, LangSmith, Braintrust, and more
 - 🚀 **Ready to Use**: Copy-paste code examples with working implementations
-- 🤝 **Community Driven**: Submit your own evals via GitHub PR
+- 🤝 **Community Driven**
 
 ## Supported Frameworks
 
