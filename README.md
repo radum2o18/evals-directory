@@ -4,7 +4,7 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 
 ## Features
 
-- 🔍 **Search & Discover**: Find evaluation patterns by framework, use case, or tags
+- 🔍 **Search & Browse**: Search evaluation patterns and browse by framework or use case
 - 📚 **Multi-Framework Support**: Patterns for Evalite, Promptfoo, LangSmith, Braintrust, and more
 - 🎯 **Use Case Categories**: RAG, chatbot, code generation, classification
 - 🚀 **Ready to Use**: Copy-paste code examples with working implementations
@@ -18,19 +18,9 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 
 ## Quick Start
 
-```bash
-# Clone the repository
-git clone https://github.com/radum2o18/evals-directory
-cd evals-directory
+Visit [evals.directory](https://evals.directory) to browse evaluation patterns.
 
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-```
-
-Visit `http://localhost:3000` to explore the directory.
+Use the search (Cmd+K) to find patterns, or browse by framework and use case category in the sidebar.
 
 ## Contributing
 
