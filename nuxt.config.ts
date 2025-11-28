@@ -27,9 +27,16 @@ export default defineNuxtConfig({
   },
 
   fonts: {
+    defaults: {
+      fallbacks: {
+        'serif': ['Georgia', 'Times New Roman', 'serif'],
+        'sans-serif': ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        'monospace': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'monospace']
+      }
+    },
     families: [
-      { name: 'DM Sans', provider: 'google', preload: true, weights: [400, 500, 600, 700] },
-      { name: 'JetBrains Mono', provider: 'google', preload: true }
+      { name: 'DM Sans', provider: 'google', preload: true, weights: [400, 500, 600, 700], display: 'fallback' },
+      { name: 'JetBrains Mono', provider: 'google', preload: true, display: 'fallback' }
     ]
   },
 

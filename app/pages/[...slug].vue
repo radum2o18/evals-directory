@@ -134,7 +134,7 @@ const isFrameworkIndex = computed(() => {
 
           <div v-if="page.created_at" class="flex items-center gap-2">
             <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
-            <span>{{ new Date(page.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) }}</span>
+            <NuxtTime :datetime="page.created_at" year="numeric" month="short" day="numeric" />
           </div>
         </div>
 

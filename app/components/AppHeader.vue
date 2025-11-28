@@ -1,46 +1,26 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
+import type { ContentNavigationItem } from '@nuxt/content'
 
-const route = useRoute()
-const { frameworks } = useFrameworks()
+// Inject the content navigation from app.vue
+const navigation = inject<Ref<ContentNavigationItem[] | undefined>>('navigation')
 
-const navItems = computed<NavigationMenuItem[]>(() => [
-  {
-    label: 'Frameworks',
-    icon: 'i-heroicons-cube',
-    active: route.path !== '/' && route.path !== '/about' && !route.path.startsWith('/about'),
-    children: Object.values(frameworks).map((fw) => ({
-      label: fw.name,
-      description: fw.description,
-      to: `/${fw.slug}`,
-      icon: fw.icon
-    }))
-  },
-  {
-    label: 'About',
-    to: '/about',
-    icon: 'i-heroicons-information-circle',
-    active: route.path === '/about'
+const processedNavigation = computed(() => {
+  if (!navigation?.value) return []
+  
+  const items = [...navigation.value]
+  const aboutIndex = items.findIndex(item => 
+    item.path === '/about' || item.title?.toLowerCase() === 'about'
+  )
+  
+  if (aboutIndex !== -1) {
+    const aboutItem = items[aboutIndex]
+    if (aboutItem) {
+      return [...items.filter((_, i) => i !== aboutIndex), aboutItem]
+    }
   }
-])
-
-const mobileNavItems = computed<NavigationMenuItem[]>(() => [
-  {
-    label: 'Frameworks',
-    icon: 'i-heroicons-cube',
-    defaultOpen: true,
-    children: Object.values(frameworks).map((fw) => ({
-      label: fw.name,
-      to: `/${fw.slug}`,
-      icon: fw.icon
-    }))
-  },
-  {
-    label: 'About',
-    to: '/about',
-    icon: 'i-heroicons-information-circle'
-  }
-])
+  
+  return items
+})
 </script>
 
 <template>
@@ -52,12 +32,7 @@ const mobileNavItems = computed<NavigationMenuItem[]>(() => [
       </NuxtLink>
     </template>
 
-    <UNavigationMenu
-      v-if="navItems.length"
-      :items="navItems"
-      arrow
-      content-orientation="vertical"
-    />
+    <template #default />
 
     <template #right>
       <UTooltip text="Search" :kbds="['meta', 'K']">
@@ -88,10 +63,9 @@ const mobileNavItems = computed<NavigationMenuItem[]>(() => [
     </template>
 
     <template #body>
-      <UNavigationMenu
-        v-if="mobileNavItems.length"
-        :items="mobileNavItems"
-        orientation="vertical"
+      <UContentNavigation
+        :navigation="processedNavigation"
+        highlight
         class="-mx-2.5"
       />
     </template>

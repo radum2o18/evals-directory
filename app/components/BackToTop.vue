@@ -19,7 +19,8 @@ const scrollToTop = () => {
     leave-from-class="opacity-100 translate-y-0"
     leave-to-class="opacity-0 translate-y-4"
   >
-    <div v-show="isVisible" class="fixed bottom-6 right-6 z-50">
+    <div v-show="isVisible" class="fixed bottom-20 right-6 z-50">
+      <UTooltip text="Back to top">
       <UButton
         icon="i-heroicons-chevron-up"
         color="neutral"
@@ -30,6 +31,7 @@ const scrollToTop = () => {
         aria-label="Back to top"
         @click="scrollToTop"
       />
+      </UTooltip>
     </div>
   </Transition>
 </template>

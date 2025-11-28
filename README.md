@@ -16,25 +16,9 @@ A curated directory of AI evaluation patterns across multiple frameworks. Find, 
 - **LangSmith** - LangChain ecosystem evaluation platform
 - **Promptfoo** - CLI-first evaluation with YAML configs
 
-## Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/radum2o18/evals-directory
-cd evals-directory
-
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-```
-
-Visit `http://localhost:3000` to explore the directory.
-
 ## Contributing
 
-Thank you for your interest in contributing! This guide will help you submit your AI evaluation patterns.
+This guide will help you submit your AI evaluation patterns.
 
 ### How to Submit an Eval
 
@@ -140,26 +124,6 @@ Then open a Pull Request on GitHub.
 
 ### Guidelines
 
-#### Content Quality
-
-- **Clear**: Explain the eval purpose clearly
-- **Complete**: Include working code examples
-- **Tested**: Verify the code actually works
-- **Documented**: Add comments where helpful
-
-#### Code Standards
-
-- Use TypeScript for Evalite examples
-- Follow the existing code style
-- Include error handling where appropriate
-- Add meaningful variable names
-
-#### Naming
-
-- **File names**: kebab-case (e.g., `hallucination-detection.md`)
-- **Titles**: Title Case (e.g., "Hallucination Detection")
-- **Tags**: lowercase (e.g., `rag`, `hallucination`)
-
 #### Categories
 
 Choose the most appropriate category:
@@ -178,5 +142,3 @@ Open an issue or reach out on [X](https://x.com/Capn0bvious).
 ## License
 
 MIT
-
-By contributing, you agree your submissions are under the MIT License.

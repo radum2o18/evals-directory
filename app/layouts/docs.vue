@@ -92,7 +92,6 @@ const filteredNavigation = computed(() => {
             </UInput>
           </div>
           <UContentNavigation
-            v-if="filteredNavigation.length"
             :navigation="filteredNavigation"
             highlight
           />

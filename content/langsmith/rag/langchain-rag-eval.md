@@ -22,6 +22,8 @@ Perfect for teams using LangChain who want integrated evaluation with automatic 
 
 ### TypeScript
 
+::code-collapse
+
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -197,7 +199,11 @@ const evalResults = await evaluate(
 console.log("Evaluation Results:", evalResults);
 ```
 
+::
+
 ### Python
+
+::code-collapse
 
 ```python
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -354,6 +360,8 @@ eval_results = evaluate(
 
 print("Evaluation Results:", eval_results)
 ```
+
+::
 
 ## Metrics Tracked
 

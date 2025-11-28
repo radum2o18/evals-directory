@@ -12,12 +12,14 @@ const footerLinks: NavigationMenuItem[] = [
     target: '_blank'
   }
 ]
+
+const now = new Date()
 </script>
 
 <template>
   <UFooter>
     <template #left>
-      <p class="text-muted text-sm">Made with 💚 ~ © {{ new Date().getFullYear() }} Radu M. All rights reserved. </p>
+      <p class="text-muted text-sm">Made with 💚 ~ © <NuxtTime :datetime="now" year="numeric" /> Radu M. All rights reserved.</p>
     </template>
 
     <UNavigationMenu :items="footerLinks" variant="link" />
