@@ -15,11 +15,14 @@ export default defineContentConfig({
           use_case: z.enum(['rag', 'chatbot', 'code-gen', 'classification', 'prompt-engineering', 'experimentation', 'other']).optional(),
           languages: z.array(z.enum(['typescript', 'python', 'yaml'])).optional(),
           models: z.array(z.string()).optional(),
-          author: z.string().optional(),
-          github: z.string().optional(),
+          github_username: z.string().optional(),
           created_at: z.string().optional(),
           difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
-          tags: z.array(z.string()).optional()
+          tags: z.array(z.enum([
+            'accuracy', 'precision', 'recall', 'f1', 'latency', 'relevance', 'coherence', 'completeness', 'correctness', 'coverage',
+            'hallucination', 'safety', 'grounding', 'context', 'memory', 'moderation',
+            'production', 'testing', 'benchmarking', 'streaming'
+          ])).optional()
         })
       })
     )

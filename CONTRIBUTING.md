@@ -44,10 +44,10 @@ description: One-sentence description of what this eval does
 use_case: chatbot | rag | code-gen | classification | prompt-engineering | experimentation
 languages: [typescript, python, yaml]  # What language examples you provide
 models: [gpt-4, claude-sonnet-4]  # Models tested
-github: yourgithubusername  # Your GitHub username (required)
+github_username: yourusername  # Your GitHub username (required)
 created_at: 2025-11-25
 difficulty: beginner | intermediate | advanced
-tags: [relevant, tags, here]
+tags: [accuracy, hallucination, testing]  # See tag reference below
 ---
 
 # Your Eval Name
@@ -90,6 +90,63 @@ Describe the real-world scenario where this eval is useful.
 3. Tip 3
 ```
 
+## 🏷️ Tags Reference
+
+Tags describe **what your eval measures** and **how it's used**. Use only tags from this predefined list.
+
+> **Important**: Tags are different from `use_case`. The `use_case` field describes *what type of system* you're evaluating (rag, chatbot, etc.). Tags describe *what aspects* the eval measures.
+
+### Metrics (what the eval measures)
+
+| Tag | Description |
+|-----|-------------|
+| `accuracy` | Overall correctness of outputs |
+| `precision` | True positives vs false positives |
+| `recall` | Finding all relevant items |
+| `f1` | Harmonic mean of precision & recall |
+| `latency` | Response time and performance |
+| `relevance` | How relevant outputs are to inputs |
+| `coherence` | Logical flow and consistency |
+| `completeness` | Coverage of all required aspects |
+| `correctness` | Factual accuracy of outputs |
+| `coverage` | Breadth of test cases |
+
+### Concerns (what issues it checks for)
+
+| Tag | Description |
+|-----|-------------|
+| `hallucination` | Detecting made-up information |
+| `safety` | Harmful or inappropriate content |
+| `grounding` | Staying true to source material |
+| `context` | Proper use of provided context |
+| `memory` | Conversation history handling |
+| `moderation` | Content policy compliance |
+
+### Stage (when/how to use)
+
+| Tag | Description |
+|-----|-------------|
+| `production` | Ready for production use |
+| `testing` | For development/CI pipelines |
+| `benchmarking` | Comparing models or configs |
+| `streaming` | Streaming response evaluation |
+
+### Example Tag Usage
+
+```yaml
+# RAG eval measuring hallucination and grounding
+use_case: rag
+tags: [hallucination, grounding, accuracy]
+
+# Chatbot eval for production safety
+use_case: chatbot  
+tags: [safety, moderation, production]
+
+# Classification metrics eval
+use_case: classification
+tags: [accuracy, precision, recall, f1]
+```
+
 ## 🔤 Language Requirements by Framework
 
 | Framework | Required Languages | Notes |
@@ -103,6 +160,7 @@ Describe the real-world scenario where this eval is useful.
 
 - [ ] Frontmatter includes all required fields
 - [ ] `languages` field matches code examples provided
+- [ ] `tags` use only valid tags from the [Tags Reference](#️-tags-reference)
 - [ ] Code examples are tested and working
 - [ ] Description is clear and concise
 - [ ] Use case explains when to use this eval

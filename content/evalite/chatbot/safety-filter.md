@@ -4,10 +4,10 @@ description: Detects harmful, biased, or inappropriate chatbot responses
 use_case: chatbot
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-15
 difficulty: advanced
-tags: [chatbot, safety, moderation]
+tags: [safety, moderation]
 ---
 
 # Safety Filter

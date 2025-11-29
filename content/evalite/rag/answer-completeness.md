@@ -4,10 +4,10 @@ description: Evaluates whether RAG responses cover all aspects of the user's que
 use_case: rag
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-14
 difficulty: intermediate
-tags: [rag, completeness, coverage, quality]
+tags: [completeness, coverage]
 ---
 
 # Answer Completeness

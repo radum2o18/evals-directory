@@ -5,6 +5,7 @@ import { mapContentNavigation } from '@nuxt/ui/utils/content'
 
 const route = useRoute()
 const { getFrameworkBySlug } = useFrameworks()
+const { toggleTag, hasTag } = useTagFilter()
 const navigation = inject<Ref<ContentNavigationItem[] | undefined>>('navigation')
 
 definePageMeta({
@@ -15,7 +16,7 @@ const { data: page } = await useAsyncData(route.path, () =>
   queryCollection('content').path(route.path).first()
 )
 
-const githubUsername = computed(() => page.value?.github as string | undefined)
+const githubUsername = computed(() => page.value?.github_username as string | undefined)
 const { user: githubUser } = useGitHubUser(githubUsername)
 
 if (!page.value) {
@@ -46,10 +47,10 @@ useHead({
         '@type': 'Article',
         headline: page.value?.title,
         description: page.value?.description,
-        author: page.value?.github ? {
+        author: page.value?.github_username ? {
           '@type': 'Person',
-          name: page.value.github,
-          url: `https://github.com/${page.value.github}`
+          name: page.value.github_username,
+          url: `https://github.com/${page.value.github_username}`
         } : undefined,
         datePublished: page.value?.created_at,
         publisher: {
@@ -71,7 +72,8 @@ const breadcrumb = computed(() =>
 const displayTags = computed(() => {
   const value = page.value
   if (!value?.tags || !Array.isArray(value.tags)) return []
-  return value.tags.filter(tag => tag !== value.use_case)
+  // Filter out use_case if accidentally added as tag (cast to string for comparison)
+  return value.tags.filter(tag => (tag as string) !== (value.use_case as string))
 })
 
 const { data: surround } = await useAsyncData(`${route.path}-surround`, () =>
@@ -144,9 +146,11 @@ const isFrameworkIndex = computed(() => {
             <UBadge
               v-for="tag in displayTags"
               :key="tag"
-              color="neutral"
-              variant="subtle"
+              :color="hasTag(tag) ? 'primary' : 'neutral'"
+              :variant="hasTag(tag) ? 'solid' : 'subtle'"
               size="sm"
+              class="cursor-pointer transition-colors"
+              @click="toggleTag(tag)"
             >
               {{ tag }}
             </UBadge>

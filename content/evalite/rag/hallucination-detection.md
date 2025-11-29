@@ -4,10 +4,10 @@ description: Tests if RAG responses stick to provided context without hallucinat
 use_case: rag
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-10
 difficulty: intermediate
-tags: [rag, hallucination, context, accuracy]
+tags: [hallucination, context, accuracy]
 ---
 
 # RAG Hallucination Detection

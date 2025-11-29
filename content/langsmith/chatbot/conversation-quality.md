@@ -4,10 +4,10 @@ description: Evaluate multi-turn conversations with context tracking and memory
 use_case: chatbot
 languages: [typescript, python]
 models: [gpt-4, claude-sonnet-4]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-20
 difficulty: intermediate
-tags: [langchain, chatbot, conversation, memory, langsmith]
+tags: [memory, coherence, context]
 ---
 
 # Conversation Quality with Memory

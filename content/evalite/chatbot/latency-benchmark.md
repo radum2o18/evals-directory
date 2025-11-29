@@ -4,10 +4,10 @@ description: Measures chatbot response time and streaming performance
 use_case: chatbot
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro, gpt-3.5-turbo]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-18
 difficulty: beginner
-tags: [chatbot, performance, latency, streaming, benchmarking]
+tags: [latency, streaming, benchmarking]
 ---
 
 # Latency Benchmark

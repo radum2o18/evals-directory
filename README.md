@@ -58,11 +58,13 @@ Use this frontmatter template:
 ---
 title: Your Eval Title
 description: Brief description of what this eval tests
-use_case: rag | chatbot | code-gen | classification | other
+use_case: rag | chatbot | code-gen | classification | prompt-engineering | experimentation | other
+languages: [typescript, python, yaml]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-github: yourgithubusername
+github_username: yourgithubusername
 created_at: 2025-11-25
-tags: [tag1, tag2, tag3]
+difficulty: beginner | intermediate | advanced
+tags: [accuracy, hallucination, production]  # See CONTRIBUTING.md for valid tags
 ---
 
 # Your Eval Title

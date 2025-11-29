@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const { frameworks, getFrameworkBySlug } = useFrameworks()
 const { open } = useContentSearch()
+const { selectedTags, toggleTag, clearTags, hasTag } = useTagFilter()
+const { tagCategories } = useTagCategories()
 
 interface EvalItem {
   path: string
@@ -8,6 +10,7 @@ interface EvalItem {
   description: string
   use_case?: string
   languages?: string[]
+  tags?: string[]
   author?: string
   created_at?: string
 }
@@ -21,23 +24,50 @@ const { data: allEvals } = await useAsyncData<EvalItem[]>(
   { default: () => [] }
 )
 
-const recentEvals = computed(() => {
-  if (!allEvals.value) return []
+const usedTagsByCategory = computed(() => {
+  if (!allEvals.value) return {}
+  
+  const usedTags = new Set<string>()
+  allEvals.value.forEach((item) => {
+    item.tags?.forEach((tag) => usedTags.add(tag))
+  })
+  
+  return Object.entries(tagCategories).reduce((acc, [key, category]) => {
+    const categoryTags = category.tags.filter(tag => usedTags.has(tag))
+    if (categoryTags.length > 0) {
+      acc[key] = { ...category, tags: categoryTags }
+    }
+    return acc
+  }, {} as Record<string, { label: string; tags: string[] }>)
+})
 
-  return [...allEvals.value]
+const filteredEvals = computed(() => {
+  if (!allEvals.value) return []
+  if (selectedTags.value.length === 0) return allEvals.value
+  
+  return allEvals.value.filter((item) =>
+    selectedTags.value.every((tag) => item.tags?.includes(tag))
+  )
+})
+
+const recentEvals = computed(() => {
+  if (!filteredEvals.value) return []
+
+  const sorted = [...filteredEvals.value]
     .sort((a: EvalItem, b: EvalItem) => {
       const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
       const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
       return dateB - dateA
     })
-    .slice(0, 6)
+  
+  return selectedTags.value.length > 0 ? sorted : sorted.slice(0, 6)
 })
 
 const frameworkSections = computed(() => {
-  if (!allEvals.value) return []
+  if (!filteredEvals.value) return []
 
   return Object.values(frameworks).map((framework) => {
-    const evals = allEvals.value!
+    const evals = filteredEvals.value!
       .filter((item) => item.path?.startsWith(`/${framework.slug}/`))
       .sort((a, b) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
@@ -65,6 +95,16 @@ const getLanguageIcon = (lang: string) => {
     yaml: 'i-heroicons-code-bracket'
   }
   return icons[lang.toLowerCase()] || 'i-heroicons-code-bracket'
+}
+
+const getDisplayTags = (tags: string[] | undefined, limit = 3) => {
+  if (!tags) return []
+  
+  // Put selected tags first, then others
+  const selected = tags.filter(t => hasTag(t))
+  const others = tags.filter(t => !hasTag(t))
+  
+  return [...selected, ...others].slice(0, limit)
 }
 
 useSeoMeta({
@@ -119,6 +159,55 @@ useHead({
     </UPageHero>
 
     <UContainer class="py-16">
+      <!-- Tag Filter Section -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <UIcon name="i-heroicons-funnel" class="w-4 h-4 text-muted" />
+          <span class="text-sm text-muted">Filter by tag</span>
+          <UButton
+            size="xs"
+            color="primary"
+            variant="link"
+            class="transition-opacity"
+            :class="selectedTags.length > 0 ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+            @click="clearTags"
+          >
+            Clear all
+          </UButton>
+        </div>
+        
+        <!-- Grouped tags by category -->
+        <div class="space-y-3">
+          <div
+            v-for="(category, key) in usedTagsByCategory"
+            :key="key"
+            class="flex flex-wrap items-center gap-2"
+          >
+            <span class="text-xs font-medium text-muted w-20 shrink-0">{{ category.label }}:</span>
+            <div class="flex flex-wrap gap-1.5">
+              <UBadge
+                v-for="tag in category.tags"
+                :key="tag"
+                :color="hasTag(tag) ? 'primary' : 'neutral'"
+                :variant="hasTag(tag) ? 'solid' : 'subtle'"
+                size="sm"
+                class="cursor-pointer transition-colors"
+                @click="toggleTag(tag)"
+              >
+                {{ tag }}
+              </UBadge>
+            </div>
+          </div>
+        </div>
+        
+        <p 
+          class="mt-4 text-sm text-muted h-5 transition-opacity"
+          :class="selectedTags.length > 0 ? 'opacity-100' : 'opacity-0'"
+        >
+          Showing {{ filteredEvals.length }} of {{ allEvals?.length || 0 }} evals
+        </p>
+      </div>
+
       <div v-if="!allEvals" id="loading-state">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,9 +230,13 @@ useHead({
       <div v-else-if="allEvals && recentEvals.length === 0" id="empty-state">
         <UEmpty
           icon="i-heroicons-beaker"
-          title="No evals yet"
-          description="Be the first to contribute an evaluation pattern to the directory."
-          :actions="[{
+          :title="selectedTags.length > 0 ? 'No matching evals' : 'No evals yet'"
+          :description="selectedTags.length > 0 ? 'Try removing some filters' : 'Be the first to contribute an evaluation pattern to the directory.'"
+          :actions="selectedTags.length > 0 ? [{
+            label: 'Clear filters',
+            icon: 'i-heroicons-x-mark',
+            onClick: clearTags
+          }] : [{
             label: 'Contribute',
             icon: 'i-heroicons-plus',
             to: 'https://github.com/radum2o18/evals-directory',
@@ -153,7 +246,9 @@ useHead({
       </div>
 
       <div v-else-if="recentEvals.length" id="recent-evals">
-        <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
+        <h2 class="text-3xl font-bold mb-8">
+          {{ selectedTags.length > 0 ? 'Filtered Results' : 'Recently Added' }}
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <NuxtLink
             v-for="evalItem in recentEvals"
@@ -161,7 +256,7 @@ useHead({
             :to="evalItem.path"
             class="block"
           >
-            <UCard :ui="{ root: 'transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
+            <UCard :ui="{ root: 'h-full transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
               <div class="flex items-center gap-2 mb-4 flex-wrap">
                 <UBadge
                   v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
@@ -190,7 +285,22 @@ useHead({
                 </UBadge>
               </div>
               <h3 class="text-lg font-semibold mb-2">{{ evalItem.title }}</h3>
-              <p class="text-sm text-muted line-clamp-2">{{ evalItem.description }}</p>
+              <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
+              
+              <!-- Tags on card -->
+              <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
+                <UBadge
+                  v-for="tag in getDisplayTags(evalItem.tags)"
+                  :key="tag"
+                  :color="hasTag(tag) ? 'primary' : 'neutral'"
+                  :variant="hasTag(tag) ? 'subtle' : 'outline'"
+                  size="xs"
+                  class="cursor-pointer"
+                  @click.prevent.stop="toggleTag(tag)"
+                >
+                  {{ tag }}
+                </UBadge>
+              </div>
             </UCard>
           </NuxtLink>
         </div>
@@ -198,6 +308,7 @@ useHead({
 
       <div
         v-for="section in frameworkSections"
+        v-show="selectedTags.length === 0"
         :key="section.framework.slug"
         class="mt-16"
       >
@@ -229,7 +340,7 @@ useHead({
             :to="evalItem.path"
             class="block"
           >
-            <UCard :ui="{ root: 'transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
+            <UCard :ui="{ root: 'h-full transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
               <div class="flex items-center gap-2 mb-4 flex-wrap">
                 <UBadge
                   :color="section.framework.color"
@@ -257,7 +368,22 @@ useHead({
                 </UBadge>
               </div>
               <h3 class="text-lg font-semibold mb-2">{{ evalItem.title }}</h3>
-              <p class="text-sm text-muted line-clamp-2">{{ evalItem.description }}</p>
+              <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
+              
+              <!-- Tags on card -->
+              <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
+                <UBadge
+                  v-for="tag in getDisplayTags(evalItem.tags)"
+                  :key="tag"
+                  :color="hasTag(tag) ? 'primary' : 'neutral'"
+                  :variant="hasTag(tag) ? 'subtle' : 'outline'"
+                  size="xs"
+                  class="cursor-pointer"
+                  @click.prevent.stop="toggleTag(tag)"
+                >
+                  {{ tag }}
+                </UBadge>
+              </div>
             </UCard>
           </NuxtLink>
         </div>

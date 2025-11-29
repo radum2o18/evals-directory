@@ -4,10 +4,10 @@ description: Comprehensive classification metrics including accuracy, precision,
 use_case: classification
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-17
 difficulty: beginner
-tags: [classification, accuracy, precision, recall, f1, metrics]
+tags: [accuracy, precision, recall, f1]
 ---
 
 # Accuracy Metrics

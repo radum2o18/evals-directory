@@ -4,10 +4,10 @@ description: Compare multiple prompt variations across models to find optimal ph
 use_case: prompt-engineering
 languages: [yaml]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-22
 difficulty: beginner
-tags: [promptfoo, prompt-engineering, comparison, optimization]
+tags: [benchmarking, accuracy]
 ---
 
 # Prompt Comparison Testing

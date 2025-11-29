@@ -4,10 +4,10 @@ description: Track and compare RAG experiments with automatic versioning and met
 use_case: rag
 languages: [typescript, python]
 models: [gpt-4, claude-sonnet-4]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-19
 difficulty: intermediate
-tags: [braintrust, experiment-tracking, rag, versioning, comparison]
+tags: [benchmarking, accuracy]
 ---
 
 # RAG Experiment Tracking

@@ -4,10 +4,10 @@ description: Verifies that generated code executes correctly and produces expect
 use_case: code-gen
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, codellama]
-github: radum2o18
+github_username: radum2o18
 created_at: 2025-11-22
 difficulty: intermediate
-tags: [code-gen, testing, execution, correctness, unit-tests]
+tags: [correctness, testing]
 ---
 
 # Functionality Test
