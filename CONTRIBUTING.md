@@ -113,36 +113,7 @@ Describe the real-world scenario where this eval is useful.
 
 ## 📤 How to Submit
 
-### Option 1: GitHub Web UI (Easiest)
-
-1. Navigate to the appropriate folder on GitHub
-2. Click "Add file" → "Create new file"
-3. Name it `your-eval-name.md`
-4. Paste your content
-5. Click "Propose new file"
-6. Create pull request
-
-### Option 2: Fork & Clone (Recommended for multiple evals)
-
-```bash
-# Fork the repo on GitHub, then:
-git clone https://github.com/radum2o18/evals-directory
-cd evals-directory
-
-# Create a branch
-git checkout -b add-eval-your-eval-name
-
-# Add your eval
-mkdir -p content/framework/category
-# Create content/framework/category/your-eval.md
-
-# Commit and push
-git add .
-git commit -m "Add: Your Eval Name for Framework"
-git push origin add-eval-your-eval-name
-
-# Open PR on GitHub
-```
+See [README.md](README.md) for more details.
 
 ## 🎨 Code Style
 
@@ -160,14 +131,6 @@ git push origin add-eval-your-eval-name
 - 2-space indentation
 - Comments for complex sections
 - Valid YAML syntax
-
-## 🔍 Validation
-
-Your PR will automatically check:
-- ✅ Frontmatter schema validation
-- ✅ Required languages present
-- ✅ No secrets in code
-- ✅ Markdown formatting
 
 ## 💡 Examples
 
@@ -200,13 +163,3 @@ const apiKey = "sk-1234567890";  // Don't do this
 ```typescript
 const apiKey = process.env.OPENAI_API_KEY;
 ```
-
-## 🙋 Need Help?
-
-- Open an issue with questions
-- Check existing evals for examples
-- Tag @radum2o18 in discussions
-
-## 📜 License
-
-By contributing, you agree your submissions will be licensed under the same license as this project.

@@ -29,7 +29,7 @@ const now = new Date()
         icon="i-simple-icons-x"
         color="neutral"
         variant="ghost"
-        to="https://x.com/radum2o18"
+        to="https://x.com/Capn0bvious"
         target="_blank"
         aria-label="Follow on X"
       />

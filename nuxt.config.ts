@@ -61,5 +61,12 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+
+  $development: {
+    hub: {
+      projectUrl: process.env.NUXT_HUB_PROJECT_URL,
+      remote: true
+    }
   }
 })

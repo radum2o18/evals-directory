@@ -61,8 +61,7 @@ description: Brief description of what this eval tests
 use_case: rag | chatbot | code-gen | classification | other
 models: [gpt-4, claude-sonnet-4, gemini-pro]
 github: yourgithubusername
-created_at: 2025-11-25  # YYYY-MM-DD format
-difficulty: beginner | intermediate | advanced
+created_at: 2025-11-25
 tags: [tag1, tag2, tag3]
 ---
 
@@ -101,26 +100,9 @@ Different ways to use this pattern...
 Links to similar evaluations...
 ```
 
-#### 5. Test Locally
+#### 5. Submit PR
 
-```bash
-pnpm dev
-```
-
-Visit `http://localhost:3000` to see your eval in the directory.
-
-#### 6. Commit & Push
-
-```bash
-git checkout -b add-my-eval
-git add content/evalite/yourCategory/your-eval.md
-git commit -m "Add: Your Eval Title"
-git push origin add-my-eval
-```
-
-#### 7. Submit PR
-
-Then open a Pull Request on GitHub.
+Create a pull request.
 
 ### Guidelines
 
@@ -133,12 +115,3 @@ Choose the most appropriate category:
 - **code-gen**: Code generation quality checks
 - **classification**: Classification task metrics
 - **other**: Anything else
-
-### Questions?
-
-Open an issue or reach out on [X](https://x.com/Capn0bvious).
-
-
-## License
-
-MIT
