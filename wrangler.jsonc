@@ -2,6 +2,10 @@
   "name": "evals-directory",
   "compatibility_date": "2025-11-29",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "dist/server/index.mjs"
+  "main": "dist/server/index.mjs",
+  "assets": {
+    "directory": "dist/public",
+    "binding": "ASSETS"
+  }
 }
 
