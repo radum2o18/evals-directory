@@ -67,5 +67,9 @@ export default defineNuxtConfig({
     hub: {
       projectUrl: process.env.NUXT_HUB_PROJECT_URL
     }
+  },
+
+  nitro: {
+    preset: 'cloudflare-module'
   }
 })
