@@ -1,13 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "evals-directory",
-  "main": ".output/server/index.mjs",
+  "main": "./dist/server/index.mjs",
   "compatibility_date": "2025-11-29",
   "compatibility_flags": [
     "nodejs_compat"
   ],
   "assets": {
-    "directory": ".output/public"
+    "directory": "./dist/public"
   },
   "d1_databases": [
     {
