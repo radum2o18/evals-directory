@@ -15,5 +15,20 @@
       "database_name": "evals-directory",
       "database_id": "1bca7b3b-b9ef-4f6e-8ee9-0cf75ee3c1d7"
     }
-  ]
+  ],
+  "observability": {
+    "enabled": false,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": false,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  }
 }
