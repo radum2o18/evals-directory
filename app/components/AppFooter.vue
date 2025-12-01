@@ -19,7 +19,7 @@ const now = new Date()
 <template>
   <UFooter>
     <template #left>
-      <p class="text-muted text-sm">Made with 💚 ~ © <NuxtTime :datetime="now" year="numeric" /> Radu M. All rights reserved.</p>
+      <p class="text-muted text-sm">Made with 💚 ~ © <NuxtTime :datetime="now" year="numeric" /> Radu M.</p>
     </template>
 
     <UNavigationMenu :items="footerLinks" variant="link" />
