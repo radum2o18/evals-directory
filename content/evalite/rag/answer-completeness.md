@@ -5,7 +5,6 @@ use_case: rag
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
-created_at: 2025-11-14
 difficulty: intermediate
 tags: [completeness, coverage]
 ---

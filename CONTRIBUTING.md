@@ -45,9 +45,12 @@ use_case: chatbot | rag | code-gen | classification | prompt-engineering | exper
 languages: [typescript, python, yaml]  # What language examples you provide
 models: [gpt-4, claude-sonnet-4]  # Models tested
 github_username: yourusername  # Your GitHub username (required)
-created_at: 2025-11-25
 difficulty: beginner | intermediate | advanced
 tags: [accuracy, hallucination, testing]  # See tag reference below
+changelog:  # Recommended - for tracking versions
+  - version: 1.0.0
+    date: 2025-11-25
+    changes: Initial implementation
 ---
 
 # Your Eval Name
@@ -89,6 +92,49 @@ Describe the real-world scenario where this eval is useful.
 2. Tip 2
 3. Tip 3
 ```
+
+## 📦 Versioning
+
+Evals support optional versioning via the `changelog` field. This helps users track changes and see who contributed.
+
+### When to Add Changelog
+
+- **New evals**: Optional, but recommended to start with `1.0.0`
+- **Updating existing evals**: Always add a new changelog entry
+
+### Changelog Format
+
+Each changelog entry requires a `date` field (YYYY-MM-DD format):
+
+```yaml
+changelog:
+  - version: 2.0.0
+    date: 2025-12-03
+    changes: Added new scorer for tone analysis
+  - version: 1.0.0
+    date: 2025-11-15
+    changes: Initial implementation
+```
+
+**Why dates are required:**
+- Provides complete history for all versions
+- No gaps in the timeline
+- Users can see exactly when each version was released
+
+### How It Works
+
+- Entries are ordered newest-first (latest version at top)
+- The site displays version badge and "latest" indicator
+- Multiple contributors are shown as stacked avatars
+- Evals are sorted by most recently updated (from git history)
+
+### Versioning Guidelines
+
+| Change Type | Version Bump | Example |
+|-------------|--------------|---------|
+| Bug fixes, typos | Patch (1.0.x) | 1.0.0 → 1.0.1 |
+| New scorers, examples | Minor (1.x.0) | 1.0.0 → 1.1.0 |
+| Breaking changes, rewrites | Major (x.0.0) | 1.0.0 → 2.0.0 |
 
 ## 🏷️ Tags Reference
 
@@ -158,16 +204,15 @@ tags: [accuracy, precision, recall, f1]
 
 ## ✅ Checklist Before Submitting
 
-- [ ] Frontmatter includes all required fields
+- [ ] Frontmatter includes all required fields (`title`, `description`, `github_username`)
 - [ ] `languages` field matches code examples provided
 - [ ] `tags` use only valid tags from the [Tags Reference](#️-tags-reference)
 - [ ] Code examples are tested and working
 - [ ] Description is clear and concise
 - [ ] Use case explains when to use this eval
 - [ ] Metrics section documents what's measured
-- [ ] Best practices included (if applicable)
 - [ ] No hardcoded API keys or secrets
-- [ ] Follows existing eval formatting
+- [ ] If updating existing eval: added changelog entry
 
 ## 📤 How to Submit
 

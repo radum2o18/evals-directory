@@ -4,6 +4,13 @@ const { open } = useContentSearch()
 const { selectedTags, toggleTag, clearTags, hasTag } = useTagFilter()
 const { tagCategories } = useTagCategories()
 
+interface ChangelogEntry {
+  version: string
+  date: string
+  changes: string
+  author?: string
+}
+
 interface EvalItem {
   path: string
   title: string
@@ -12,15 +19,21 @@ interface EvalItem {
   languages?: string[]
   tags?: string[]
   author?: string
-  created_at?: string
+  changelog?: ChangelogEntry[]
+}
+
+const getLastUpdated = (item: EvalItem): number => {
+  const date = item.changelog?.[0]?.date
+  return date ? new Date(date).getTime() : 0
+}
+
+const wasUpdated = (item: EvalItem): boolean => {
+  return (item.changelog?.length || 0) >= 2
 }
 
 const { data: allEvals } = await useAsyncData<EvalItem[]>(
   'all-evals',
-  async () => {
-    const items = await queryCollection('content').all() as unknown as EvalItem[]
-    return items.filter((item) => !!item.path)
-  },
+  () => queryCollection('content').all() as Promise<EvalItem[]>,
   { default: () => [] }
 )
 
@@ -54,11 +67,7 @@ const recentEvals = computed(() => {
   if (!filteredEvals.value) return []
 
   const sorted = [...filteredEvals.value]
-    .sort((a: EvalItem, b: EvalItem) => {
-      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-      return dateB - dateA
-    })
+    .sort((a, b) => getLastUpdated(b) - getLastUpdated(a))
   
   return selectedTags.value.length > 0 ? sorted : sorted.slice(0, 6)
 })
@@ -69,11 +78,7 @@ const frameworkSections = computed(() => {
   return Object.values(frameworks).map((framework) => {
     const evals = filteredEvals.value!
       .filter((item) => item.path?.startsWith(`/${framework.slug}/`))
-      .sort((a, b) => {
-        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-        return dateB - dateA
-      })
+      .sort((a, b) => getLastUpdated(b) - getLastUpdated(a))
       .slice(0, 3)
 
     return {
@@ -284,10 +289,14 @@ useHead({
                   {{ lang }}
                 </UBadge>
               </div>
-              <h3 class="text-lg font-semibold mb-2">{{ evalItem.title }}</h3>
+              <div class="flex items-center gap-2 mb-2">
+                <h3 class="text-lg font-semibold">{{ evalItem.title }}</h3>
+                <UBadge v-if="wasUpdated(evalItem)" color="info" variant="subtle" size="sm">
+                  updated
+                </UBadge>
+              </div>
               <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
               
-              <!-- Tags on card -->
               <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
                 <UBadge
                   v-for="tag in getDisplayTags(evalItem.tags)"
@@ -367,10 +376,14 @@ useHead({
                   {{ lang }}
                 </UBadge>
               </div>
-              <h3 class="text-lg font-semibold mb-2">{{ evalItem.title }}</h3>
+              <div class="flex items-center gap-2 mb-2">
+                <h3 class="text-lg font-semibold">{{ evalItem.title }}</h3>
+                <UBadge v-if="wasUpdated(evalItem)" color="info" variant="subtle" size="sm">
+                  updated
+                </UBadge>
+              </div>
               <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
               
-              <!-- Tags on card -->
               <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
                 <UBadge
                   v-for="tag in getDisplayTags(evalItem.tags)"

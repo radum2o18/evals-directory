@@ -16,9 +16,6 @@ const { data: page } = await useAsyncData(route.path, () =>
   queryCollection('content').path(route.path).first()
 )
 
-const githubUsername = computed(() => page.value?.github_username as string | undefined)
-const { user: githubUser } = useGitHubUser(githubUsername)
-
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
@@ -27,6 +24,31 @@ const pageTitle = computed(() => `${page.value?.title} | Evals Directory`)
 const framework = computed(() => {
   const slug = route.path.split('/')[1] || ''
   return getFrameworkBySlug(slug)
+})
+
+const currentVersion = computed(() => {
+  const changelog = page.value?.changelog as Array<{ version: string }> | undefined
+  return changelog?.[0]?.version
+})
+
+const lastUpdated = computed(() => {
+  const changelog = page.value?.changelog as Array<{ date?: string }> | undefined
+  return changelog?.[0]?.date
+})
+
+const contributors = computed(() => {
+  const changelog = page.value?.changelog as Array<{ author?: string }> | undefined
+  const authors = new Set<string>()
+  
+  if (page.value?.github_username) {
+    authors.add(page.value.github_username)
+  }
+  
+  changelog?.forEach(entry => {
+    if (entry.author) authors.add(entry.author)
+  })
+  
+  return Array.from(authors).slice(0, 5)
 })
 
 useSeoMeta({
@@ -52,7 +74,7 @@ useHead({
           name: page.value.github_username,
           url: `https://github.com/${page.value.github_username}`
         } : undefined,
-        datePublished: page.value?.created_at,
+        datePublished: (page.value?.changelog as Array<{ date?: string }> | undefined)?.at(-1)?.date,
         publisher: {
           '@type': 'Organization',
           name: 'Evals Directory',
@@ -72,7 +94,6 @@ const breadcrumb = computed(() =>
 const displayTags = computed(() => {
   const value = page.value
   if (!value?.tags || !Array.isArray(value.tags)) return []
-  // Filter out use_case if accidentally added as tag (cast to string for comparison)
   return value.tags.filter(tag => (tag as string) !== (value.use_case as string))
 })
 
@@ -111,51 +132,131 @@ const isFrameworkIndex = computed(() => {
     </UPageHeader>
 
     <UPageBody>
-      <div v-if="!isFrameworkIndex" class="not-prose mb-6 text-sm space-y-3">
-        <div v-if="page.use_case" class="flex flex-wrap items-center gap-2">
-          <span class="text-xs uppercase tracking-wide text-muted">Use case:</span>
-          <UBadge color="primary" variant="subtle" size="sm">
+      <div v-if="!isFrameworkIndex" class="not-prose mb-8">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <UBadge v-if="page.use_case" color="primary" variant="solid" size="md">
             {{ page.use_case }}
           </UBadge>
-        </div>
 
-        <div class="flex flex-wrap items-center gap-4 text-muted">
-          <div v-if="page.models" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-sparkles" class="w-4 h-4" />
-            <span>{{ page.models.join(', ') }}</span>
+          <div v-if="currentVersion" class="flex items-center gap-2 text-sm">
+            <div class="flex items-center gap-1.5 text-muted">
+              <UIcon name="i-heroicons-tag" class="w-3.5 h-3.5" />
+              <span class="font-mono">v{{ currentVersion }}</span>
+        </div>
+            <UBadge color="success" variant="subtle" size="sm">
+              latest
+            </UBadge>
           </div>
 
+          <div class="flex-1" />
+
+          <div class="flex items-center gap-4 text-sm text-muted">
           <UUser
-            v-if="githubUser"
-            :name="githubUser.login"
-            :avatar="{ src: githubUser.avatar_url, alt: githubUser.login }"
-            :to="githubUser.html_url"
+              v-if="contributors.length === 1"
+              :name="contributors[0]"
+              :avatar="{ src: `https://github.com/${contributors[0]}.png`, alt: contributors[0] }"
+              :to="`https://github.com/${contributors[0]}`"
             target="_blank"
             size="xs"
           />
 
-          <div v-if="page.created_at" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
-            <NuxtTime :datetime="page.created_at" year="numeric" month="short" day="numeric" />
+            <UAvatarGroup v-else-if="contributors.length > 1" size="xs" :max="4">
+              <UTooltip v-for="author in contributors" :key="author" :text="author">
+                <ULink
+                  :to="`https://github.com/${author}`"
+                  target="_blank"
+                  class="hover:ring-primary transition"
+                  raw
+                >
+                  <UAvatar
+                    :src="`https://github.com/${author}.png`"
+                    :alt="author"
+                  />
+                </ULink>
+              </UTooltip>
+            </UAvatarGroup>
+            <div v-if="lastUpdated" class="flex items-center gap-1.5 opacity-70">
+              <NuxtTime :datetime="lastUpdated" year="numeric" month="short" day="numeric" />
+            </div>
           </div>
         </div>
 
-        <div v-if="displayTags.length" class="flex flex-wrap items-center gap-2">
-          <span class="text-xs uppercase tracking-wide text-muted">Tags:</span>
-          <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          <div v-if="page.models?.length" class="flex items-center gap-2 text-muted">
+            <UIcon name="i-heroicons-sparkles" class="w-4 h-4 opacity-60" />
+            <span>{{ page.models.join(', ') }}</span>
+          </div>
+
+          <div v-if="displayTags?.length" class="flex flex-wrap gap-1.5">
             <UBadge
               v-for="tag in displayTags"
               :key="tag"
               :color="hasTag(tag) ? 'primary' : 'neutral'"
-              :variant="hasTag(tag) ? 'solid' : 'subtle'"
+              :variant="hasTag(tag) ? 'solid' : 'outline'"
               size="sm"
-              class="cursor-pointer transition-colors"
+              class="cursor-pointer"
               @click="toggleTag(tag)"
             >
               {{ tag }}
             </UBadge>
           </div>
         </div>
+
+        <UCollapsible v-if="page.changelog?.length" class="mt-4 pt-4 border-t border-dashed border-default">
+          <button class="group flex items-center gap-2 text-sm text-muted hover:text-default transition-colors">
+            <UIcon
+              name="i-lucide-chevron-right"
+              class="w-4 h-4 transition-transform group-data-[state=open]:rotate-90"
+            />
+            <span class="uppercase tracking-wider font-medium">Changelog</span>
+            <UBadge color="neutral" variant="subtle" size="sm">{{ page.changelog.length }}</UBadge>
+          </button>
+
+          <template #content>
+            <div class="mt-3 ml-5 space-y-3">
+              <div
+                v-for="(entry, index) in page.changelog"
+                :key="entry.version"
+                class="grid grid-cols-[auto_1fr_auto] items-center gap-3 text-sm"
+              >
+                <span
+                  class="font-mono text-xs px-1.5 py-0.5 rounded bg-elevated w-14 text-center"
+                  :class="index === 0 ? 'text-highlighted' : 'text-muted'"
+                >
+                  v{{ entry.version }}
+                </span>
+
+                <span :class="index === 0 ? 'text-highlighted' : 'text-muted'">
+                  {{ entry.changes }}
+                </span>
+
+                <div class="flex items-center justify-end gap-2 min-w-[140px]">
+                  <UTooltip v-if="entry.author" :text="entry.author">
+                    <ULink
+                      :to="`https://github.com/${entry.author}`"
+                      target="_blank"
+                      raw
+                    >
+                      <UAvatar
+                        :src="`https://github.com/${entry.author}.png`"
+                        :alt="entry.author"
+                        size="2xs"
+                      />
+                    </ULink>
+                  </UTooltip>
+                  <NuxtTime
+                    v-if="entry.date"
+                    :datetime="entry.date"
+                    month="short"
+                    day="numeric"
+                    year="numeric"
+                    class="text-xs text-muted w-[85px] text-right"
+                  />
+                </div>
+              </div>
+            </div>
+          </template>
+        </UCollapsible>
       </div>
 
       <ContentRenderer v-if="page.body" :value="page" />

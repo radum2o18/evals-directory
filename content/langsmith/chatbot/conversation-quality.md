@@ -5,7 +5,6 @@ use_case: chatbot
 languages: [typescript, python]
 models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
-created_at: 2025-11-20
 difficulty: intermediate
 tags: [memory, coherence, context]
 ---

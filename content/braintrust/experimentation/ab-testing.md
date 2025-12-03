@@ -5,7 +5,6 @@ use_case: experimentation
 languages: [typescript, python]
 models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
-created_at: 2025-11-21
 difficulty: advanced
 tags: [production, testing, benchmarking]
 ---

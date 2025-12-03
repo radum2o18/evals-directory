@@ -16,13 +16,18 @@ export default defineContentConfig({
           languages: z.array(z.enum(['typescript', 'python', 'yaml'])).optional(),
           models: z.array(z.string()).optional(),
           github_username: z.string().optional(),
-          created_at: z.string().optional(),
           difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
           tags: z.array(z.enum([
             'accuracy', 'precision', 'recall', 'f1', 'latency', 'relevance', 'coherence', 'completeness', 'correctness', 'coverage',
             'hallucination', 'safety', 'grounding', 'context', 'memory', 'moderation',
             'production', 'testing', 'benchmarking', 'streaming'
-          ])).optional()
+          ])).optional(),
+          changelog: z.array(z.object({
+            version: z.string(),
+            date: z.string(),
+            changes: z.string(),
+            author: z.string().optional()
+          })).optional()
         })
       })
     )

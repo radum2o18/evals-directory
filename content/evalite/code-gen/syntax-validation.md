@@ -5,7 +5,6 @@ use_case: code-gen
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, codellama]
 github_username: radum2o18
-created_at: 2025-11-21
 difficulty: beginner
 tags: [correctness, testing]
 ---

@@ -62,9 +62,12 @@ use_case: rag | chatbot | code-gen | classification | prompt-engineering | exper
 languages: [typescript, python, yaml]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
 github_username: yourgithubusername
-created_at: 2025-11-25
 difficulty: beginner | intermediate | advanced
 tags: [accuracy, hallucination, production]  # See CONTRIBUTING.md for valid tags
+changelog:  # Recommended - tracks version history
+  - version: 1.0.0
+    date: 2025-11-25
+    changes: Initial implementation
 ---
 
 # Your Eval Title

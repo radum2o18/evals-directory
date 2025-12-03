@@ -5,7 +5,6 @@ use_case: classification
 languages: [typescript]
 models: [gpt-4, claude-sonnet-4, gemini-pro]
 github_username: radum2o18
-created_at: 2025-11-17
 difficulty: beginner
 tags: [accuracy, precision, recall, f1]
 ---
