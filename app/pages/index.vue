@@ -40,7 +40,9 @@ const wasUpdated = (item: EvalItem): boolean => {
 
 const { data: allEvals } = await useAsyncData<EvalItem[]>(
   'all-evals',
-  () => queryCollection('content').all() as Promise<EvalItem[]>,
+  () => queryCollection('content')
+    .select('path', 'title', 'description', 'use_case', 'languages', 'tags', 'github_username', 'created_at', 'changelog')
+    .all() as Promise<EvalItem[]>,
   { default: () => [] }
 )
 
