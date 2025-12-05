@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: intermediate
 tags: [precision, recall, accuracy]
+created_at: 2025-11-15
 ---
 
 # Retrieval Accuracy

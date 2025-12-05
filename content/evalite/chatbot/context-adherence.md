@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4, gemini-pro]
 github_username: radum2o18
 difficulty: intermediate
 tags: [context, hallucination, grounding]
+created_at: 2025-11-19
 ---
 
 # Context Adherence

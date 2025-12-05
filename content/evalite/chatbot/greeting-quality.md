@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: beginner
 tags: [relevance, coherence]
+created_at: 2025-11-15
 changelog:
   - version: 2.0.0
     date: 2025-12-03

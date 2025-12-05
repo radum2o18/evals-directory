@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: intermediate
 tags: [relevance, accuracy, grounding]
+created_at: 2025-11-30
 ---
 
 # LangChain RAG Evaluation

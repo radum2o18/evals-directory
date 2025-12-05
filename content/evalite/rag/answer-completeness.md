@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: intermediate
 tags: [completeness, coverage]
+created_at: 2025-11-17
 ---
 
 # Answer Completeness

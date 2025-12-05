@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: intermediate
 tags: [benchmarking, accuracy]
+created_at: 2025-11-28
 ---
 
 # RAG Experiment Tracking

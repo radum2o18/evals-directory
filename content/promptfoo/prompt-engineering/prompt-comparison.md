@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4, gemini-pro]
 github_username: radum2o18
 difficulty: beginner
 tags: [benchmarking, accuracy]
+created_at: 2025-12-01
 ---
 
 # Prompt Comparison Testing

@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: advanced
 tags: [production, testing, benchmarking]
+created_at: 2025-11-27
 ---
 
 # A/B Testing & Gradual Rollout

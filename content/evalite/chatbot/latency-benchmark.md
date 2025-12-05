@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4, gemini-pro, gpt-3.5-turbo]
 github_username: radum2o18
 difficulty: beginner
 tags: [latency, streaming, benchmarking]
+created_at: 2025-11-22
 ---
 
 # Latency Benchmark

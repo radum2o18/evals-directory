@@ -19,12 +19,19 @@ interface EvalItem {
   languages?: string[]
   tags?: string[]
   author?: string
+  created_at?: string
   changelog?: ChangelogEntry[]
 }
 
 const getLastUpdated = (item: EvalItem): number => {
   const date = item.changelog?.[0]?.date
   return date ? new Date(date).getTime() : 0
+}
+
+const getCreatedAt = (item: EvalItem): number => {
+  if (item.created_at) return new Date(item.created_at).getTime()
+  const oldest = item.changelog?.[item.changelog.length - 1]?.date
+  return oldest ? new Date(oldest).getTime() : 0
 }
 
 const wasUpdated = (item: EvalItem): boolean => {
@@ -63,13 +70,47 @@ const filteredEvals = computed(() => {
   )
 })
 
-const recentEvals = computed(() => {
+const recentlyUpdated = computed(() => {
+  if (!filteredEvals.value) return []
+
+  return [...filteredEvals.value]
+    .filter(item => wasUpdated(item))
+    .sort((a, b) => getLastUpdated(b) - getLastUpdated(a))
+    .slice(0, 3)
+})
+
+const recentlyAdded = computed(() => {
   if (!filteredEvals.value) return []
 
   const sorted = [...filteredEvals.value]
-    .sort((a, b) => getLastUpdated(b) - getLastUpdated(a))
-  
+    .sort((a, b) => getCreatedAt(b) - getCreatedAt(a))
+
   return selectedTags.value.length > 0 ? sorted : sorted.slice(0, 6)
+})
+
+const featuredSections = computed(() => {
+  if (!filteredEvals.value) return []
+
+  const sections: { id: string; title: string; items: EvalItem[]; updatedOnly?: boolean }[] = []
+
+  if (selectedTags.value.length === 0 && recentlyUpdated.value.length > 0) {
+    sections.push({
+      id: 'recently-updated',
+      title: 'Recently Updated',
+      items: recentlyUpdated.value,
+      updatedOnly: true
+    })
+  }
+
+  if (recentlyAdded.value.length) {
+    sections.push({
+      id: 'recently-added',
+      title: selectedTags.value.length > 0 ? 'Filtered Results' : 'Recently Added',
+      items: recentlyAdded.value
+    })
+  }
+
+  return sections
 })
 
 const frameworkSections = computed(() => {
@@ -78,7 +119,11 @@ const frameworkSections = computed(() => {
   return Object.values(frameworks).map((framework) => {
     const evals = filteredEvals.value!
       .filter((item) => item.path?.startsWith(`/${framework.slug}/`))
-      .sort((a, b) => getLastUpdated(b) - getLastUpdated(a))
+      .sort((a, b) => {
+        const mostRecentA = Math.max(getLastUpdated(a), getCreatedAt(a))
+        const mostRecentB = Math.max(getLastUpdated(b), getCreatedAt(b))
+        return mostRecentB - mostRecentA
+      })
       .slice(0, 3)
 
     return {
@@ -232,7 +277,7 @@ useHead({
         </div>
       </div>
 
-      <div v-else-if="allEvals && recentEvals.length === 0" id="empty-state">
+      <div v-else-if="allEvals && recentlyAdded.length === 0" id="empty-state">
         <UEmpty
           icon="i-heroicons-beaker"
           :title="selectedTags.length > 0 ? 'No matching evals' : 'No evals yet'"
@@ -250,70 +295,77 @@ useHead({
         />
       </div>
 
-      <div v-else-if="recentEvals.length" id="recent-evals">
-        <h2 class="text-3xl font-bold mb-8">
-          {{ selectedTags.length > 0 ? 'Filtered Results' : 'Recently Added' }}
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <NuxtLink
-            v-for="evalItem in recentEvals"
-            :key="evalItem.path"
-            :to="evalItem.path"
-            class="block"
-          >
-            <UCard :ui="{ root: 'h-full transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
-              <div class="flex items-center gap-2 mb-4 flex-wrap">
-                <UBadge
-                  v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
-                  :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
-                  size="sm"
-                >
-                  {{ getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.name }}
-                </UBadge>
-                <UBadge
-                  v-if="evalItem.use_case"
-                  color="neutral"
-                  variant="soft"
-                  size="sm"
-                >
-                  {{ evalItem.use_case }}
-                </UBadge>
-                <UBadge
-                  v-for="lang in evalItem.languages"
-                  :key="lang"
-                  color="neutral"
-                  variant="outline"
-                  size="sm"
-                  :icon="getLanguageIcon(lang)"
-                >
-                  {{ lang }}
-                </UBadge>
-              </div>
-              <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-lg font-semibold">{{ evalItem.title }}</h3>
-                <UBadge v-if="wasUpdated(evalItem)" color="info" variant="subtle" size="sm">
-                  updated
-                </UBadge>
-              </div>
-              <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
-              
-              <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
-                <UBadge
-                  v-for="tag in getDisplayTags(evalItem.tags)"
-                  :key="tag"
-                  :color="hasTag(tag) ? 'primary' : 'neutral'"
-                  :variant="hasTag(tag) ? 'subtle' : 'outline'"
-                  size="xs"
-                  class="cursor-pointer"
-                  @click.prevent.stop="toggleTag(tag)"
-                >
-                  {{ tag }}
-                </UBadge>
-              </div>
-            </UCard>
-          </NuxtLink>
+      <template v-else>
+        <div
+          v-for="section in featuredSections"
+          :id="section.id"
+          :key="section.id"
+          class="mb-16 last:mb-0"
+        >
+          <h2 class="text-3xl font-bold mb-8">
+            {{ section.title }}
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <NuxtLink
+              v-for="evalItem in section.items"
+              :key="evalItem.path"
+              :to="evalItem.path"
+              class="block"
+            >
+              <UCard :ui="{ root: 'h-full transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                  <UBadge
+                    v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
+                    :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
+                    size="sm"
+                  >
+                    {{ getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.name }}
+                  </UBadge>
+                  <UBadge
+                    v-if="evalItem.use_case"
+                    color="neutral"
+                    variant="soft"
+                    size="sm"
+                  >
+                    {{ evalItem.use_case }}
+                  </UBadge>
+                  <UBadge
+                    v-for="lang in evalItem.languages"
+                    :key="lang"
+                    color="neutral"
+                    variant="outline"
+                    size="sm"
+                    :icon="getLanguageIcon(lang)"
+                  >
+                    {{ lang }}
+                  </UBadge>
+                </div>
+                <div class="flex items-center gap-2 mb-2">
+                  <h3 class="text-lg font-semibold">{{ evalItem.title }}</h3>
+                  <UBadge v-if="section.updatedOnly || wasUpdated(evalItem)" color="info" variant="subtle" size="sm">
+                    updated
+                  </UBadge>
+                </div>
+                <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
+
+                <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
+                  <UBadge
+                    v-for="tag in getDisplayTags(evalItem.tags)"
+                    :key="tag"
+                    :color="hasTag(tag) ? 'primary' : 'neutral'"
+                    :variant="hasTag(tag) ? 'subtle' : 'outline'"
+                    size="xs"
+                    class="cursor-pointer"
+                    @click.prevent.stop="toggleTag(tag)"
+                  >
+                    {{ tag }}
+                  </UBadge>
+                </div>
+              </UCard>
+            </NuxtLink>
+          </div>
         </div>
-      </div>
+      </template>
 
       <div
         v-for="section in frameworkSections"

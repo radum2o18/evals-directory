@@ -22,6 +22,7 @@ export default defineContentConfig({
             'hallucination', 'safety', 'grounding', 'context', 'memory', 'moderation',
             'production', 'testing', 'benchmarking', 'streaming'
           ])).optional(),
+          created_at: z.string().optional(),
           changelog: z.array(z.object({
             version: z.string(),
             date: z.string(),

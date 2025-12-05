@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: intermediate
 tags: [accuracy, precision, recall, f1]
+created_at: 2025-11-26
 ---
 
 # Multi-Label Classification

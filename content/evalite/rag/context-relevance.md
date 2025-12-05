@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4]
 github_username: radum2o18
 difficulty: beginner
 tags: [relevance, precision, context]
+created_at: 2025-11-18
 ---
 
 # Context Relevance

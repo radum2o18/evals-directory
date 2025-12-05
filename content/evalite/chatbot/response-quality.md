@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4, gemini-pro]
 github_username: radum2o18
 difficulty: intermediate
 tags: [coherence, relevance, completeness]
+created_at: 2025-11-20
 ---
 
 # Response Quality

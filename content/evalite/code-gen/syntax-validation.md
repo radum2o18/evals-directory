@@ -7,6 +7,7 @@ models: [gpt-4, claude-sonnet-4, codellama]
 github_username: radum2o18
 difficulty: beginner
 tags: [correctness, testing]
+created_at: 2025-11-24
 ---
 
 # Syntax Validation
