@@ -38,12 +38,12 @@ const wasUpdated = (item: EvalItem): boolean => {
   return (item.changelog?.length || 0) >= 2
 }
 
-const { data: allEvals } = await useAsyncData<EvalItem[]>(
+const { data: allEvals, status } = await useAsyncData<EvalItem[]>(
   'all-evals',
   () => queryCollection('content')
     .select('path', 'title', 'description', 'use_case', 'languages', 'tags', 'github_username', 'created_at', 'changelog')
     .all() as Promise<EvalItem[]>,
-  { default: () => [] }
+  { default: () => [], server: false }
 )
 
 const usedTagsByCategory = computed(() => {
@@ -260,7 +260,7 @@ useHead({
         </p>
       </div>
 
-      <div v-if="!allEvals" id="loading-state">
+      <div v-if="status === 'pending'" id="loading-state">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <UCard v-for="i in 6" :key="i">
@@ -279,7 +279,7 @@ useHead({
         </div>
       </div>
 
-      <div v-else-if="allEvals && recentlyAdded.length === 0" id="empty-state">
+      <div v-else-if="status === 'success' && recentlyAdded.length === 0" id="empty-state">
         <UEmpty
           icon="i-heroicons-beaker"
           :title="selectedTags.length > 0 ? 'No matching evals' : 'No evals yet'"
