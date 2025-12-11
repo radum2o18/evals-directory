@@ -1,4 +1,3 @@
-// Tag categories for UI grouping (must match content.config.ts schema)
 export const tagCategories = {
   metrics: {
     label: 'Metrics',

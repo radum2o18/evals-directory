@@ -1,6 +1,7 @@
 ---
 title: About
 description: A curated collection of LLM evaluation patterns across popular frameworks. Find production-ready examples to ship better AI faster.
+navigation: false
 ---
 
 # The Problem

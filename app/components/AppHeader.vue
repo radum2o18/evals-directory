@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ContentNavigationItem } from '@nuxt/content'
 
-// Inject the content navigation from app.vue
 const navigation = inject<Ref<ContentNavigationItem[] | undefined>>('navigation')
 
 const processedNavigation = computed(() => {
@@ -39,14 +38,14 @@ const processedNavigation = computed(() => {
         <UContentSearchButton />
       </UTooltip>
 
-      <UTooltip text="Submit an eval">
+      <UTooltip text="Contribute an eval">
         <UButton
           to="https://github.com/radum2o18/evals-directory"
           target="_blank"
           icon="i-heroicons-plus"
           color="neutral"
           variant="ghost"
-          aria-label="Submit an eval"
+          aria-label="Contribute an eval"
         />
       </UTooltip>
 

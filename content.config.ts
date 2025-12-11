@@ -28,7 +28,12 @@ export default defineContentConfig({
             date: z.string(),
             changes: z.string(),
             author: z.string().optional()
-          })).optional()
+          })).optional(),
+          metrics: z.array(z.string()).optional(),
+          setup_time: z.enum(['5min', '15min', '30min', '1hr', '2hr+']).optional(),
+          runtime_cost: z.enum(['free', 'low', 'medium', 'high']).optional(),
+          data_requirements: z.enum(['none', 'sample', 'dataset', 'custom']).optional(),
+          eval_type: z.enum(['unit', 'integration', 'benchmark', 'regression', 'ab-test']).optional()
         })
       })
     )
