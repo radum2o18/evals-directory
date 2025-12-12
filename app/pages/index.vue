@@ -31,31 +31,15 @@ const {
 
 const { copy, copied } = useClipboard()
 
-interface ChangelogEntry {
-  version: string
-  date: string
-  changes: string
-  author?: string
-}
+const { data: allEvals, status } = await useAsyncData(
+  'all-evals',
+  () => queryCollection('content')
+    .select('path', 'title', 'description', 'use_case', 'languages', 'tags', 'github_username', 'created_at', 'difficulty', 'changelog', 'models', 'metrics', 'setup_time', 'runtime_cost', 'data_requirements', 'eval_type')
+    .all(),
+  { default: () => [], server: false }
+)
 
-interface EvalItem {
-  path: string
-  title: string
-  description: string
-  use_case?: string
-  languages?: string[]
-  tags?: string[]
-  author?: string
-  created_at?: string
-  difficulty?: string
-  changelog?: ChangelogEntry[]
-  models?: string[]
-  metrics?: string[]
-  setup_time?: string
-  runtime_cost?: string
-  data_requirements?: string
-  eval_type?: string
-}
+type EvalItem = NonNullable<typeof allEvals.value>[number]
 
 const getLastUpdated = (item: EvalItem): number => {
   const date = item.changelog?.[0]?.date
@@ -71,14 +55,6 @@ const getCreatedAt = (item: EvalItem): number => {
 const wasUpdated = (item: EvalItem): boolean => {
   return (item.changelog?.length || 0) >= 2
 }
-
-const { data: allEvals, status } = await useAsyncData<EvalItem[]>(
-  'all-evals',
-  () => queryCollection('content')
-    .select('path', 'title', 'description', 'use_case', 'languages', 'tags', 'github_username', 'created_at', 'difficulty', 'changelog', 'models', 'metrics', 'setup_time', 'runtime_cost', 'data_requirements', 'eval_type')
-    .all() as Promise<EvalItem[]>,
-  { default: () => [], server: false }
-)
 
 watch(allEvals, (items) => {
   if (items) registerItems(items)

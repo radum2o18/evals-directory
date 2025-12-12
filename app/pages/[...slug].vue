@@ -3,16 +3,6 @@ import type { ContentNavigationItem } from '@nuxt/content'
 import { findPageBreadcrumb } from '@nuxt/content/utils'
 import { mapContentNavigation } from '@nuxt/ui/utils/content'
 
-interface FrameworkEval {
-  path: string
-  title: string
-  description: string
-  use_case?: string
-  languages?: string[]
-  difficulty?: string
-  tags?: string[]
-}
-
 const route = useRoute()
 const { getFrameworkBySlug } = useFrameworks()
 const { toggleTag, hasTag } = useTagFilter()
@@ -50,25 +40,18 @@ const framework = computed(() => {
   return getFrameworkBySlug(slug)
 })
 
-const currentVersion = computed(() => {
-  const changelog = page.value?.changelog as Array<{ version: string }> | undefined
-  return changelog?.[0]?.version
-})
+const currentVersion = computed(() => page.value?.changelog?.[0]?.version)
 
-const lastUpdated = computed(() => {
-  const changelog = page.value?.changelog as Array<{ date?: string }> | undefined
-  return changelog?.[0]?.date
-})
+const lastUpdated = computed(() => page.value?.changelog?.[0]?.date)
 
 const contributors = computed(() => {
-  const changelog = page.value?.changelog as Array<{ author?: string }> | undefined
   const authors = new Set<string>()
   
   if (page.value?.github_username) {
     authors.add(page.value.github_username)
   }
   
-  changelog?.forEach(entry => {
+  page.value?.changelog?.forEach(entry => {
     if (entry.author) authors.add(entry.author)
   })
   
@@ -98,7 +81,7 @@ useHead({
           name: page.value.github_username,
           url: `https://github.com/${page.value.github_username}`
         } : undefined,
-        datePublished: (page.value?.changelog as Array<{ date?: string }> | undefined)?.at(-1)?.date,
+        datePublished: page.value?.changelog?.at(-1)?.date,
         publisher: {
           '@type': 'Organization',
           name: 'Evals Directory',
@@ -118,7 +101,7 @@ const breadcrumb = computed(() =>
 const displayTags = computed(() => {
   const value = page.value
   if (!value?.tags || !Array.isArray(value.tags)) return []
-  return value.tags.filter(tag => (tag as string) !== (value.use_case as string))
+  return value.tags.filter(tag => (tag as string) !== value.use_case)
 })
 
 const { data: surround } = await useAsyncData(`${route.path}-surround`, () =>
@@ -144,7 +127,7 @@ const isFrameworkIndex = computed(() => {
   return pathSegments.length === 1 && framework.value !== undefined
 })
 
-const { data: frameworkEvals } = await useAsyncData<FrameworkEval[]>(
+const { data: frameworkEvals } = await useAsyncData(
   () => `framework-evals-${frameworkSlug.value}`,
   async () => {
     const slug = frameworkSlug.value
@@ -152,7 +135,7 @@ const { data: frameworkEvals } = await useAsyncData<FrameworkEval[]>(
     
     const allEvals = await queryCollection('content')
       .select('path', 'title', 'description', 'use_case', 'languages', 'difficulty', 'tags')
-      .all() as FrameworkEval[]
+      .all()
     
     return allEvals.filter(e => e.path?.startsWith(`/${slug}/`) && e.path !== `/${slug}`)
   },
@@ -248,8 +231,8 @@ const getDifficultyColor = (difficulty?: string) => {
             {{ page.use_case }}
           </UBadge>
 
-          <UBadge v-if="page.difficulty" :color="getDifficultyColor(page.difficulty as string)" variant="subtle" size="md">
-            {{ (page.difficulty as string).charAt(0).toUpperCase() + (page.difficulty as string).slice(1) }}
+          <UBadge v-if="page.difficulty" :color="getDifficultyColor(page.difficulty)" variant="subtle" size="md">
+            {{ page.difficulty.charAt(0).toUpperCase() + page.difficulty.slice(1) }}
           </UBadge>
 
           <div v-if="currentVersion" class="flex items-center gap-2 text-sm">
@@ -345,9 +328,9 @@ const getDifficultyColor = (difficulty?: string) => {
             <span>{{ page.models.join(', ') }}</span>
           </div>
 
-          <div v-if="(page.metrics as string[] | undefined)?.length" class="flex items-center gap-2 text-muted">
+          <div v-if="page.metrics?.length" class="flex items-center gap-2 text-muted">
             <UIcon name="i-heroicons-chart-bar" class="w-4 h-4 opacity-60" />
-            <span>{{ (page.metrics as string[]).join(', ') }}</span>
+            <span>{{ page.metrics.join(', ') }}</span>
           </div>
 
               <div v-if="displayTags?.length" class="flex flex-wrap items-center gap-2">

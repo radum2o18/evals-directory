@@ -20,15 +20,10 @@ defineShortcuts({
   }
 })
 
-interface EvalItem {
-  path: string
-  tags?: string[]
-}
-
-const { data: allEvals } = await useAsyncData<EvalItem[]>(
+const { data: allEvals } = await useAsyncData(
   'all-evals-docs',
   async () => {
-    const items = await queryCollection('content').all() as unknown as EvalItem[]
+    const items = await queryCollection('content').select('path', 'tags').all()
     return items.filter((item) => !!item.path)
   },
   { default: () => [] }
@@ -60,7 +55,7 @@ const matchingPaths = computed(() => {
   
   const paths = new Set<string>()
   allEvals.value.forEach((item) => {
-    if (selectedTags.value.every((tag) => item.tags?.includes(tag))) {
+    if (selectedTags.value.every(tag => (item.tags as string[] | undefined)?.includes(tag))) {
       paths.add(item.path)
     }
   })
