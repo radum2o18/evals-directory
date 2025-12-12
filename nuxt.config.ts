@@ -18,7 +18,16 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   hub: {
-    database: true
+    db: 'sqlite'
+  },
+
+  $development: {
+    nitro: {
+      preset: 'node-server'
+    },
+    hub: {
+      db: 'sqlite'
+    }
   },
 
   app: {
@@ -60,12 +69,6 @@ export default defineNuxtConfig({
           langs: ['python', 'yaml', 'typescript', 'javascript', 'json', 'bash']
         }
       }
-    }
-  },
-
-  $development: {
-    hub: {
-      projectUrl: process.env.NUXT_HUB_PROJECT_URL
     }
   },
 

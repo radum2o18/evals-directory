@@ -15,3 +15,6 @@ CREATE TABLE `eval_views` (
 --> statement-breakpoint
 CREATE INDEX `eval_views_path_idx` ON `eval_views` (`eval_path`);--> statement-breakpoint
 CREATE INDEX `eval_views_viewed_at_idx` ON `eval_views` (`viewed_at`);
+
+
+

@@ -8,7 +8,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "nuxt db generate",
+    "db:migrate": "nuxt db migrate",
+    "db:sql": "nuxt db sql"
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
@@ -24,6 +26,7 @@
     "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/lucide": "^1.2.74",
     "@iconify-json/simple-icons": "^1.2.59",
+    "@libsql/client": "^0.15.15",
     "@nuxt/content": "^3.9.0",
     "@nuxt/eslint": "1.12.1",
     "@nuxt/hints": "1.0.0-alpha.3",
@@ -33,7 +36,7 @@
     "@nuxtjs/mdc": "^0.19.1",
     "@nuxtjs/sitemap": "^7.4.9",
     "@vueuse/nuxt": "^14.1.0",
-    "drizzle-kit": "^0.30.0",
+    "drizzle-kit": "^0.31.8",
     "nuxt": "^4.2.2",
     "wrangler": "latest"
   }

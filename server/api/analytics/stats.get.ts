@@ -1,16 +1,18 @@
+import * as dbSchema from '../../db/schema'
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const path = query.path as string | undefined
   const limit = Math.min(parseInt(query.limit as string) || 10, 50)
 
-  const db = useDrizzle()
+  const db = await getDb(event)
 
   try {
     if (path) {
       const stats = await db
         .select()
-        .from(tables.evalStats)
-        .where(eq(tables.evalStats.evalPath, path))
+        .from(dbSchema.evalStats)
+        .where(eq(dbSchema.evalStats.evalPath, path))
         .get()
 
       return {
@@ -22,12 +24,12 @@ export default defineEventHandler(async (event) => {
 
     const topEvals = await db
       .select({
-        path: tables.evalStats.evalPath,
-        viewCount: tables.evalStats.viewCount,
-        lastViewedAt: tables.evalStats.lastViewedAt
+        path: dbSchema.evalStats.evalPath,
+        viewCount: dbSchema.evalStats.viewCount,
+        lastViewedAt: dbSchema.evalStats.lastViewedAt
       })
-      .from(tables.evalStats)
-      .orderBy(desc(tables.evalStats.viewCount))
+      .from(dbSchema.evalStats)
+      .orderBy(desc(dbSchema.evalStats.viewCount))
       .limit(limit)
       .all()
 

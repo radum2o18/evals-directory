@@ -157,6 +157,16 @@ const recommendedEvals = computed(() => {
     .slice(0, 3)
 })
 
+const difficulty = computed(() => {
+  const value = page.value?.difficulty
+  return typeof value === 'string' ? value : undefined
+})
+
+const difficultyLabel = computed(() => {
+  const value = difficulty.value
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : ''
+})
+
 const getDifficultyColor = (difficulty?: string) => {
   switch (difficulty) {
     case 'beginner': return 'success'
@@ -231,8 +241,8 @@ const getDifficultyColor = (difficulty?: string) => {
             {{ page.use_case }}
           </UBadge>
 
-          <UBadge v-if="page.difficulty" :color="getDifficultyColor(page.difficulty)" variant="subtle" size="md">
-            {{ page.difficulty.charAt(0).toUpperCase() + page.difficulty.slice(1) }}
+          <UBadge v-if="difficulty" :color="getDifficultyColor(difficulty)" variant="subtle" size="md">
+            {{ difficultyLabel }}
           </UBadge>
 
           <div v-if="currentVersion" class="flex items-center gap-2 text-sm">

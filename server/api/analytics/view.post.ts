@@ -1,3 +1,5 @@
+import * as dbSchema from '../../db/schema'
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { path } = body
@@ -16,7 +18,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const db = useDrizzle()
+  const db = await getDb(event)
   const now = new Date()
 
   const headers = getHeaders(event)
@@ -25,7 +27,7 @@ export default defineEventHandler(async (event) => {
   const viewId = crypto.randomUUID()
 
   try {
-    await db.insert(tables.evalViews).values({
+    await db.insert(dbSchema.evalViews).values({
       id: viewId,
       evalPath: path,
       viewedAt: now,
@@ -34,21 +36,21 @@ export default defineEventHandler(async (event) => {
 
     const existingStats = await db
       .select()
-      .from(tables.evalStats)
-      .where(eq(tables.evalStats.evalPath, path))
+      .from(dbSchema.evalStats)
+      .where(eq(dbSchema.evalStats.evalPath, path))
       .get()
 
     if (existingStats) {
       await db
-        .update(tables.evalStats)
+        .update(dbSchema.evalStats)
         .set({
           viewCount: existingStats.viewCount + 1,
           lastViewedAt: now,
           updatedAt: now
         })
-        .where(eq(tables.evalStats.evalPath, path))
+        .where(eq(dbSchema.evalStats.evalPath, path))
     } else {
-      await db.insert(tables.evalStats).values({
+      await db.insert(dbSchema.evalStats).values({
         evalPath: path,
         viewCount: 1,
         lastViewedAt: now,
