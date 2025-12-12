@@ -1,18 +1,17 @@
-import * as dbSchema from '../../db/schema'
+import { db, schema } from 'hub:db'
+import { eq, desc } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const path = query.path as string | undefined
   const limit = Math.min(parseInt(query.limit as string) || 10, 50)
 
-  const db = await getDb(event)
-
   try {
     if (path) {
       const stats = await db
         .select()
-        .from(dbSchema.evalStats)
-        .where(eq(dbSchema.evalStats.evalPath, path))
+        .from(schema.evalStats)
+        .where(eq(schema.evalStats.evalPath, path))
         .get()
 
       return {
@@ -24,12 +23,12 @@ export default defineEventHandler(async (event) => {
 
     const topEvals = await db
       .select({
-        path: dbSchema.evalStats.evalPath,
-        viewCount: dbSchema.evalStats.viewCount,
-        lastViewedAt: dbSchema.evalStats.lastViewedAt
+        path: schema.evalStats.evalPath,
+        viewCount: schema.evalStats.viewCount,
+        lastViewedAt: schema.evalStats.lastViewedAt
       })
-      .from(dbSchema.evalStats)
-      .orderBy(desc(dbSchema.evalStats.viewCount))
+      .from(schema.evalStats)
+      .orderBy(desc(schema.evalStats.viewCount))
       .limit(limit)
       .all()
 
@@ -43,4 +42,3 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
-

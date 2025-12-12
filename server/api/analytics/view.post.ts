@@ -1,4 +1,5 @@
-import * as dbSchema from '../../db/schema'
+import { db, schema } from 'hub:db'
+import { eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -18,7 +19,6 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const db = await getDb(event)
   const now = new Date()
 
   const headers = getHeaders(event)
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   const viewId = crypto.randomUUID()
 
   try {
-    await db.insert(dbSchema.evalViews).values({
+    await db.insert(schema.evalViews).values({
       id: viewId,
       evalPath: path,
       viewedAt: now,
@@ -36,21 +36,21 @@ export default defineEventHandler(async (event) => {
 
     const existingStats = await db
       .select()
-      .from(dbSchema.evalStats)
-      .where(eq(dbSchema.evalStats.evalPath, path))
+      .from(schema.evalStats)
+      .where(eq(schema.evalStats.evalPath, path))
       .get()
 
     if (existingStats) {
       await db
-        .update(dbSchema.evalStats)
+        .update(schema.evalStats)
         .set({
           viewCount: existingStats.viewCount + 1,
           lastViewedAt: now,
           updatedAt: now
         })
-        .where(eq(dbSchema.evalStats.evalPath, path))
+        .where(eq(schema.evalStats.evalPath, path))
     } else {
-      await db.insert(dbSchema.evalStats).values({
+      await db.insert(schema.evalStats).values({
         evalPath: path,
         viewCount: 1,
         lastViewedAt: now,
@@ -74,4 +74,3 @@ async function hashString(str: string): Promise<string> {
   const hashArray = Array.from(new Uint8Array(hashBuffer))
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16)
 }
-

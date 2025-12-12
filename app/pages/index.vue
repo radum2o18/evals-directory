@@ -417,7 +417,7 @@ useHead({
         </p>
       </div>
 
-      <div v-if="status === 'pending'" id="loading-state">
+      <div v-if="status === 'pending' || status === 'idle'" id="loading-state">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <UCard v-for="i in 3" :key="i">

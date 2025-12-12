@@ -2,8 +2,6 @@
 import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 
-const UBadge = resolveComponent('UBadge')
-
 const {
   comparisonItems,
   isCompareModalOpen
@@ -125,7 +123,7 @@ const columns = computed<TableColumn<ComparisonRow>[]>(() => {
     cols.push({
       id: item.path,
       header: () => h('div', { class: 'min-w-[240px] max-w-[280px]' }, [
-        framework && h(UBadge, {
+        framework && h(resolveComponent('UBadge'), {
           color: framework.color,
           size: 'sm',
           class: 'mb-1.5'
@@ -141,7 +139,7 @@ const columns = computed<TableColumn<ComparisonRow>[]>(() => {
         const field = row.original.field
 
         if (field === 'difficulty' && value) {
-          return h(UBadge, {
+          return h(resolveComponent('UBadge'), {
             color: getDifficultyColor(value as string),
             variant: 'subtle',
             size: 'md'
@@ -149,7 +147,7 @@ const columns = computed<TableColumn<ComparisonRow>[]>(() => {
         }
 
         if (field === 'runtime_cost' && value) {
-          return h(UBadge, {
+          return h(resolveComponent('UBadge'), {
             color: getRuntimeCostColor(value as string),
             variant: 'subtle',
             size: 'md'
@@ -159,7 +157,7 @@ const columns = computed<TableColumn<ComparisonRow>[]>(() => {
         if (field === 'tags' && Array.isArray(value) && value.length > 0) {
           return h('div', { class: 'flex flex-wrap gap-1.5' }, [
             ...value.slice(0, 4).map(tag =>
-              h(UBadge, {
+              h(resolveComponent('UBadge'), {
                 key: tag,
                 color: 'neutral',
                 variant: 'outline',
