@@ -59,10 +59,6 @@ export default defineNuxtConfig({
   },
 
   content: {
-    database: {
-      type: 'd1',
-      bindingName: 'DB'
-    },
     build: {
       markdown: {
         highlight: {
@@ -77,6 +73,14 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'cloudflare-module'
+    preset: 'cloudflare-module',
+    externals: {
+      external: ['better-sqlite3', '@libsql/client']
+    },
+    rollupConfig: {
+      output: {
+        sourcemap: false
+      }
+    }
   }
 })
