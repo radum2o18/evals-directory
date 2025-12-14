@@ -18,7 +18,16 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   hub: {
-    database: true
+    db: 'sqlite'
+  },
+
+  $development: {
+    nitro: {
+      preset: 'node-server'
+    },
+    hub: {
+      db: 'sqlite'
+    }
   },
 
   app: {
@@ -63,13 +72,15 @@ export default defineNuxtConfig({
     }
   },
 
-  $development: {
-    hub: {
-      projectUrl: process.env.NUXT_HUB_PROJECT_URL
-    }
-  },
-
   nitro: {
-    preset: 'cloudflare-module'
+    preset: 'cloudflare-module',
+    externals: {
+      external: ['better-sqlite3', '@libsql/client']
+    },
+    rollupConfig: {
+      output: {
+        sourcemap: false
+      }
+    }
   }
 })

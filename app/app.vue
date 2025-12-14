@@ -61,6 +61,10 @@ const files = computed(() => {
     <AppFooter />
 
     <BackToTop />
+
+    <ClientOnly>
+      <CompareModal />
+    </ClientOnly>
   </UApp>
 </template>
 

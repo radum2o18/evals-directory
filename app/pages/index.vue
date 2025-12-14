@@ -1,27 +1,45 @@
 <script setup lang="ts">
 const { frameworks, getFrameworkBySlug } = useFrameworks()
 const { open } = useContentSearch()
-const { selectedTags, toggleTag, clearTags, hasTag } = useTagFilter()
 const { tagCategories } = useTagCategories()
+const {
+  toggleTag,
+  toggleFramework,
+  toggleUseCase,
+  toggleLanguage,
+  toggleDifficulty,
+  hasTag,
+  hasFramework,
+  hasUseCase,
+  hasLanguage,
+  hasDifficulty,
+  clearAll,
+  hasActiveFilters,
+  activeFilterCount,
+  filterItems
+} = useFacetedFilter()
+const {
+  comparisonCount,
+  canCompare,
+  canAddMore,
+  isInComparison,
+  toggleComparison,
+  clearComparison,
+  openCompareModal,
+  registerItems
+} = useComparison()
 
-interface ChangelogEntry {
-  version: string
-  date: string
-  changes: string
-  author?: string
-}
+const { copy, copied } = useClipboard()
 
-interface EvalItem {
-  path: string
-  title: string
-  description: string
-  use_case?: string
-  languages?: string[]
-  tags?: string[]
-  author?: string
-  created_at?: string
-  changelog?: ChangelogEntry[]
-}
+const { data: allEvals, status } = await useAsyncData(
+  'all-evals',
+  () => queryCollection('content')
+    .select('path', 'title', 'description', 'use_case', 'languages', 'tags', 'github_username', 'created_at', 'difficulty', 'changelog', 'models', 'metrics', 'setup_time', 'runtime_cost', 'data_requirements', 'eval_type')
+    .all(),
+  { default: () => [], server: false }
+)
+
+type EvalItem = NonNullable<typeof allEvals.value>[number]
 
 const getLastUpdated = (item: EvalItem): number => {
   const date = item.changelog?.[0]?.date
@@ -38,13 +56,9 @@ const wasUpdated = (item: EvalItem): boolean => {
   return (item.changelog?.length || 0) >= 2
 }
 
-const { data: allEvals, status } = await useAsyncData<EvalItem[]>(
-  'all-evals',
-  () => queryCollection('content')
-    .select('path', 'title', 'description', 'use_case', 'languages', 'tags', 'github_username', 'created_at', 'changelog')
-    .all() as Promise<EvalItem[]>,
-  { default: () => [], server: false }
-)
+watch(allEvals, (items) => {
+  if (items) registerItems(items)
+}, { immediate: true })
 
 const usedTagsByCategory = computed(() => {
   if (!allEvals.value) return {}
@@ -63,13 +77,49 @@ const usedTagsByCategory = computed(() => {
   }, {} as Record<string, { label: string; tags: string[] }>)
 })
 
+const availableUseCases = computed(() => {
+  if (!allEvals.value) return []
+  const cases = new Set<string>()
+  allEvals.value.forEach(item => {
+    if (item.use_case) cases.add(item.use_case)
+  })
+  return Array.from(cases)
+})
+
+const availableLanguages = computed(() => {
+  if (!allEvals.value) return []
+  const langs = new Set<string>()
+  allEvals.value.forEach(item => {
+    item.languages?.forEach(lang => langs.add(lang))
+  })
+  return Array.from(langs)
+})
+
+const availableDifficulties = computed(() => {
+  if (!allEvals.value) return []
+  const diffs = new Set<string>()
+  allEvals.value.forEach(item => {
+    if (item.difficulty) diffs.add(item.difficulty)
+  })
+  return Array.from(diffs)
+})
+
+const availableFrameworks = computed(() => {
+  if (!allEvals.value) return []
+  const knownFrameworks = Object.keys(frameworks)
+  const frameworkSlugs = new Set<string>()
+  allEvals.value.forEach(item => {
+    const fw = item.path?.split('/')[1]
+    if (fw && knownFrameworks.includes(fw)) frameworkSlugs.add(fw)
+  })
+  return Array.from(frameworkSlugs)
+})
+
 const filteredEvals = computed(() => {
   if (!allEvals.value) return []
-  if (selectedTags.value.length === 0) return allEvals.value
+  if (!hasActiveFilters.value) return allEvals.value
   
-  return allEvals.value.filter((item) =>
-    selectedTags.value.every((tag) => item.tags?.includes(tag))
-  )
+  return filterItems(allEvals.value)
 })
 
 const recentlyUpdated = computed(() => {
@@ -84,10 +134,9 @@ const recentlyUpdated = computed(() => {
 const recentlyAdded = computed(() => {
   if (!filteredEvals.value) return []
 
-  const sorted = [...filteredEvals.value]
+  return [...filteredEvals.value]
     .sort((a, b) => getCreatedAt(b) - getCreatedAt(a))
-
-  return selectedTags.value.length > 0 ? sorted : sorted.slice(0, 6)
+    .slice(0, 3)
 })
 
 const featuredSections = computed(() => {
@@ -95,7 +144,7 @@ const featuredSections = computed(() => {
 
   const sections: { id: string; title: string; items: EvalItem[]; updatedOnly?: boolean }[] = []
 
-  if (selectedTags.value.length === 0 && recentlyUpdated.value.length > 0) {
+  if (!hasActiveFilters.value && recentlyUpdated.value.length > 0) {
     sections.push({
       id: 'recently-updated',
       title: 'Recently Updated',
@@ -107,13 +156,41 @@ const featuredSections = computed(() => {
   if (recentlyAdded.value.length) {
     sections.push({
       id: 'recently-added',
-      title: selectedTags.value.length > 0 ? 'Filtered Results' : 'Recently Added',
+      title: hasActiveFilters.value ? 'Filtered Results' : 'Recently Added',
       items: recentlyAdded.value
     })
   }
 
   return sections
 })
+
+const handleCopyLink = () => {
+  copy(window.location.href)
+}
+
+const formatDifficulty = (d: string) => d.charAt(0).toUpperCase() + d.slice(1)
+
+const formatUseCase = (uc: string) => {
+  const labels: Record<string, string> = {
+    'rag': 'RAG',
+    'chatbot': 'Chatbot',
+    'code-gen': 'Code Gen',
+    'classification': 'Classification',
+    'prompt-engineering': 'Prompt Engineering',
+    'experimentation': 'Experimentation',
+    'other': 'Other'
+  }
+  return labels[uc] || uc
+}
+
+const getLanguageIcon = (lang: string) => {
+  const icons: Record<string, string> = {
+    typescript: 'i-simple-icons-typescript',
+    python: 'i-simple-icons-python',
+    yaml: 'i-heroicons-code-bracket'
+  }
+  return icons[lang.toLowerCase()] || 'i-heroicons-code-bracket'
+}
 
 const frameworkSections = computed(() => {
   if (!filteredEvals.value) return []
@@ -138,25 +215,6 @@ const frameworkSections = computed(() => {
 
 const openSearch = () => {
   (open as Ref<boolean>).value = true
-}
-
-const getLanguageIcon = (lang: string) => {
-  const icons: Record<string, string> = {
-    typescript: 'i-simple-icons-typescript',
-    python: 'i-simple-icons-python',
-    yaml: 'i-heroicons-code-bracket'
-  }
-  return icons[lang.toLowerCase()] || 'i-heroicons-code-bracket'
-}
-
-const getDisplayTags = (tags: string[] | undefined, limit = 3) => {
-  if (!tags) return []
-  
-  // Put selected tags first, then others
-  const selected = tags.filter(t => hasTag(t))
-  const others = tags.filter(t => !hasTag(t))
-  
-  return [...selected, ...others].slice(0, limit)
 }
 
 useSeoMeta({
@@ -211,59 +269,158 @@ useHead({
     </UPageHero>
 
     <UContainer class="py-16">
-      <!-- Tag Filter Section -->
       <div class="mb-8">
-        <div class="flex items-center gap-3 mb-4">
-          <UIcon name="i-heroicons-funnel" class="w-4 h-4 text-muted" />
-          <span class="text-sm text-muted">Filter by tag</span>
-          <UButton
-            size="xs"
-            color="primary"
-            variant="link"
-            class="transition-opacity"
-            :class="selectedTags.length > 0 ? 'opacity-100' : 'opacity-0 pointer-events-none'"
-            @click="clearTags"
-          >
-            Clear all
-          </UButton>
+        <div class="flex items-center justify-between gap-3 mb-5">
+          <div class="flex items-center gap-3">
+            <UIcon name="i-heroicons-funnel" class="w-5 h-5 text-muted" />
+            <span class="text-base font-medium text-muted">Filter evals</span>
+            <UBadge v-if="activeFilterCount > 0" color="primary" size="md">
+              {{ activeFilterCount }} active
+            </UBadge>
+          </div>
+          <div class="flex items-center gap-2">
+<UButton
+                  v-if="hasActiveFilters"
+                  size="sm"
+                  color="neutral"
+                  variant="ghost"
+                  :icon="copied ? 'i-lucide-copy-check' : 'i-lucide-copy'"
+                  @click="handleCopyLink"
+                >
+                  {{ copied ? 'Copied!' : 'Copy link' }}
+                </UButton>
+            <UButton
+              size="sm"
+              color="primary"
+              variant="ghost"
+              class="transition-opacity"
+              :class="hasActiveFilters ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+              @click="clearAll"
+            >
+              Clear all
+            </UButton>
+          </div>
         </div>
         
-        <!-- Grouped tags by category -->
-        <div class="space-y-3">
-          <div
-            v-for="(category, key) in usedTagsByCategory"
-            :key="key"
-            class="flex flex-wrap items-center gap-2"
-          >
-            <span class="text-xs font-medium text-muted w-20 shrink-0">{{ category.label }}:</span>
-            <div class="flex flex-wrap gap-1.5">
+        <!-- Faceted Filters Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-4">
+          <div v-if="availableFrameworks.length > 0" class="space-y-2.5">
+            <span class="text-sm font-medium text-muted uppercase tracking-wider">Framework</span>
+            <div class="flex flex-wrap gap-2">
               <UBadge
-                v-for="tag in category.tags"
-                :key="tag"
-                :color="hasTag(tag) ? 'primary' : 'neutral'"
-                :variant="hasTag(tag) ? 'solid' : 'subtle'"
-                size="sm"
+                v-for="fw in availableFrameworks"
+                :key="fw"
+                :color="hasFramework(fw) ? (getFrameworkBySlug(fw)?.color || 'primary') : 'neutral'"
+                :variant="hasFramework(fw) ? 'solid' : 'subtle'"
+                size="md"
                 class="cursor-pointer transition-colors"
-                @click="toggleTag(tag)"
+                @click="toggleFramework(fw)"
               >
-                {{ tag }}
+                {{ getFrameworkBySlug(fw)?.name || fw }}
+              </UBadge>
+            </div>
+          </div>
+
+          <div v-if="availableUseCases.length > 0" class="space-y-2.5">
+            <span class="text-sm font-medium text-muted uppercase tracking-wider">Use Case</span>
+            <div class="flex flex-wrap gap-2">
+              <UBadge
+                v-for="uc in availableUseCases"
+                :key="uc"
+                :color="hasUseCase(uc) ? 'primary' : 'neutral'"
+                :variant="hasUseCase(uc) ? 'solid' : 'subtle'"
+                size="md"
+                class="cursor-pointer transition-colors"
+                @click="toggleUseCase(uc)"
+              >
+                {{ formatUseCase(uc) }}
+              </UBadge>
+            </div>
+          </div>
+
+          <div v-if="availableLanguages.length > 0" class="space-y-2.5">
+            <span class="text-sm font-medium text-muted uppercase tracking-wider">Language</span>
+            <div class="flex flex-wrap gap-2">
+              <UBadge
+                v-for="lang in availableLanguages"
+                :key="lang"
+                :color="hasLanguage(lang) ? 'primary' : 'neutral'"
+                :variant="hasLanguage(lang) ? 'solid' : 'outline'"
+                size="md"
+                class="cursor-pointer transition-colors"
+                :icon="getLanguageIcon(lang)"
+                @click="toggleLanguage(lang)"
+              >
+                {{ lang }}
+              </UBadge>
+            </div>
+          </div>
+
+          <div v-if="availableDifficulties.length > 0" class="space-y-2.5">
+            <span class="text-sm font-medium text-muted uppercase tracking-wider">Difficulty</span>
+            <div class="flex flex-wrap gap-2">
+              <UBadge
+                v-for="diff in availableDifficulties"
+                :key="diff"
+                :color="hasDifficulty(diff) ? 'primary' : 'neutral'"
+                :variant="hasDifficulty(diff) ? 'solid' : 'subtle'"
+                size="md"
+                class="cursor-pointer transition-colors"
+                @click="toggleDifficulty(diff)"
+              >
+                {{ formatDifficulty(diff) }}
               </UBadge>
             </div>
           </div>
         </div>
+
+        <UCollapsible v-if="Object.keys(usedTagsByCategory).length > 0" class="mt-4">
+          <button class="group flex items-center gap-2 text-muted hover:text-default transition-colors">
+            <UIcon
+              name="i-lucide-chevron-right"
+              class="w-5 h-5 transition-transform group-data-[state=open]:rotate-90"
+            />
+            <span class="uppercase tracking-wider text-sm font-medium">More Tags</span>
+          </button>
+
+          <template #content>
+            <div class="mt-4 ml-6 space-y-4">
+              <div
+                v-for="(category, key) in usedTagsByCategory"
+                :key="key"
+                class="flex flex-wrap items-center gap-3"
+              >
+                <span class="text-sm font-medium text-muted w-24 shrink-0">{{ category.label }}:</span>
+                <div class="flex flex-wrap gap-2">
+                  <UBadge
+                    v-for="tag in category.tags"
+                    :key="tag"
+                    :color="hasTag(tag) ? 'primary' : 'neutral'"
+                    :variant="hasTag(tag) ? 'solid' : 'subtle'"
+                    size="md"
+                    class="cursor-pointer transition-colors"
+                    @click="toggleTag(tag)"
+                  >
+                    {{ tag }}
+                  </UBadge>
+                </div>
+              </div>
+            </div>
+          </template>
+        </UCollapsible>
         
         <p 
           class="mt-4 text-sm text-muted h-5 transition-opacity"
-          :class="selectedTags.length > 0 ? 'opacity-100' : 'opacity-0'"
+          :class="hasActiveFilters ? 'opacity-100' : 'opacity-0'"
         >
           Showing {{ filteredEvals.length }} of {{ allEvals?.length || 0 }} evals
         </p>
       </div>
 
-      <div v-if="status === 'pending'" id="loading-state">
+      <div v-if="status === 'pending' || status === 'idle'" id="loading-state">
         <h2 class="text-3xl font-bold mb-8">Recently Added</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <UCard v-for="i in 6" :key="i">
+          <UCard v-for="i in 3" :key="i">
             <div class="space-y-4">
               <div class="flex gap-2">
                 <USkeleton class="h-5 w-16 rounded-full" />
@@ -282,14 +439,14 @@ useHead({
       <div v-else-if="status === 'success' && recentlyAdded.length === 0" id="empty-state">
         <UEmpty
           icon="i-heroicons-beaker"
-          :title="selectedTags.length > 0 ? 'No matching evals' : 'No evals yet'"
-          :description="selectedTags.length > 0 ? 'Try removing some filters' : 'Be the first to contribute an evaluation pattern to the directory.'"
-          :actions="selectedTags.length > 0 ? [{
+          :title="hasActiveFilters ? 'No matching evals' : 'No evals yet'"
+          :description="hasActiveFilters ? 'Try removing some filters' : 'Be the first to contribute an evaluation pattern to the directory.'"
+          :actions="hasActiveFilters ? [{
             label: 'Clear filters',
             icon: 'i-heroicons-x-mark',
-            onClick: clearTags
+            onClick: clearAll
           }] : [{
-            label: 'Contribute',
+            label: 'Contribute an eval',
             icon: 'i-heroicons-plus',
             to: 'https://github.com/radum2o18/evals-directory',
             target: '_blank'
@@ -308,70 +465,23 @@ useHead({
             {{ section.title }}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <NuxtLink
+            <EvalCard
               v-for="evalItem in section.items"
               :key="evalItem.path"
-              :to="evalItem.path"
-              class="block"
-            >
-              <UCard :ui="{ root: 'h-full transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
-                <div class="flex items-center gap-2 mb-4 flex-wrap">
-                  <UBadge
-                    v-if="evalItem.path && getFrameworkBySlug(evalItem.path.split('/')[1] || '')"
-                    :color="getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.color"
-                    size="sm"
-                  >
-                    {{ getFrameworkBySlug(evalItem.path.split('/')[1] || '')!.name }}
-                  </UBadge>
-                  <UBadge
-                    v-if="evalItem.use_case"
-                    color="neutral"
-                    variant="soft"
-                    size="sm"
-                  >
-                    {{ evalItem.use_case }}
-                  </UBadge>
-                  <UBadge
-                    v-for="lang in evalItem.languages"
-                    :key="lang"
-                    color="neutral"
-                    variant="outline"
-                    size="sm"
-                    :icon="getLanguageIcon(lang)"
-                  >
-                    {{ lang }}
-                  </UBadge>
-                </div>
-                <div class="flex items-center gap-2 mb-2">
-                  <h3 class="text-lg font-semibold">{{ evalItem.title }}</h3>
-                  <UBadge v-if="section.updatedOnly || wasUpdated(evalItem)" color="info" variant="subtle" size="sm">
-                    updated
-                  </UBadge>
-                </div>
-                <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
-
-                <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
-                  <UBadge
-                    v-for="tag in getDisplayTags(evalItem.tags)"
-                    :key="tag"
-                    :color="hasTag(tag) ? 'primary' : 'neutral'"
-                    :variant="hasTag(tag) ? 'subtle' : 'outline'"
-                    size="xs"
-                    class="cursor-pointer"
-                    @click.prevent.stop="toggleTag(tag)"
-                  >
-                    {{ tag }}
-                  </UBadge>
-                </div>
-              </UCard>
-            </NuxtLink>
+              :item="evalItem"
+              :show-updated="section.updatedOnly"
+              :is-in-comparison="isInComparison(evalItem.path)"
+              :can-add-more="canAddMore"
+              @toggle-comparison="toggleComparison"
+              @toggle-tag="toggleTag"
+            />
           </div>
         </div>
       </template>
 
       <div
         v-for="section in frameworkSections"
-        v-show="selectedTags.length === 0"
+        v-show="!hasActiveFilters"
         :key="section.framework.slug"
         class="mt-16"
       >
@@ -397,64 +507,60 @@ useHead({
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <NuxtLink
+          <EvalCard
             v-for="evalItem in section.evals"
             :key="evalItem.path"
-            :to="evalItem.path"
-            class="block"
-          >
-            <UCard :ui="{ root: 'h-full transition-all duration-200 hover:bg-accented hover:ring-2 hover:ring-primary' }">
-              <div class="flex items-center gap-2 mb-4 flex-wrap">
-                <UBadge
-                  :color="section.framework.color"
-                  size="sm"
-                >
-                  {{ section.framework.name }}
-                </UBadge>
-                <UBadge
-                  v-if="evalItem.use_case"
-                  color="neutral"
-                  variant="soft"
-                  size="sm"
-                >
-                  {{ evalItem.use_case }}
-                </UBadge>
-                <UBadge
-                  v-for="lang in evalItem.languages"
-                  :key="lang"
-                  color="neutral"
-                  variant="outline"
-                  size="sm"
-                  :icon="getLanguageIcon(lang)"
-                >
-                  {{ lang }}
-                </UBadge>
-              </div>
-              <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-lg font-semibold">{{ evalItem.title }}</h3>
-                <UBadge v-if="wasUpdated(evalItem)" color="info" variant="subtle" size="sm">
-                  updated
-                </UBadge>
-              </div>
-              <p class="text-sm text-muted line-clamp-2 mb-3">{{ evalItem.description }}</p>
-              
-              <div v-if="evalItem.tags?.length" class="flex flex-wrap gap-1.5">
-                <UBadge
-                  v-for="tag in getDisplayTags(evalItem.tags)"
-                  :key="tag"
-                  :color="hasTag(tag) ? 'primary' : 'neutral'"
-                  :variant="hasTag(tag) ? 'subtle' : 'outline'"
-                  size="xs"
-                  class="cursor-pointer"
-                  @click.prevent.stop="toggleTag(tag)"
-                >
-                  {{ tag }}
-                </UBadge>
-              </div>
-            </UCard>
-          </NuxtLink>
+            :item="evalItem"
+            :is-in-comparison="isInComparison(evalItem.path)"
+            :can-add-more="canAddMore"
+            @toggle-comparison="toggleComparison"
+            @toggle-tag="toggleTag"
+          />
         </div>
       </div>
     </UContainer>
+
+    <!-- Comparison bar -->
+    <ClientOnly>
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 translate-y-full"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-full"
+      >
+        <div
+          v-if="comparisonCount > 0"
+          class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50"
+        >
+          <div class="flex items-center gap-3 px-4 py-2.5 bg-elevated/95 backdrop-blur-md rounded-full shadow-xl border border-default">
+            <div class="flex items-center gap-2">
+              <UIcon name="i-heroicons-scale" class="w-4 h-4 text-primary" />
+              <span class="text-sm font-medium">{{ comparisonCount }} selected</span>
+            </div>
+            <div class="w-px h-4 bg-default" />
+            <div class="flex items-center gap-1">
+              <UButton
+                size="sm"
+                color="neutral"
+                variant="ghost"
+                @click="clearComparison"
+              >
+                Clear
+              </UButton>
+              <UButton
+                size="sm"
+                color="primary"
+                :disabled="!canCompare"
+                @click="openCompareModal"
+              >
+                Compare
+              </UButton>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </ClientOnly>
   </UMain>
 </template>

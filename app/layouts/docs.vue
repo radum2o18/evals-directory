@@ -20,16 +20,10 @@ defineShortcuts({
   }
 })
 
-// Get all unique tags from content
-interface EvalItem {
-  path: string
-  tags?: string[]
-}
-
-const { data: allEvals } = await useAsyncData<EvalItem[]>(
+const { data: allEvals } = await useAsyncData(
   'all-evals-docs',
   async () => {
-    const items = await queryCollection('content').all() as unknown as EvalItem[]
+    const items = await queryCollection('content').select('path', 'tags').all()
     return items.filter((item) => !!item.path)
   },
   { default: () => [] }
@@ -56,13 +50,12 @@ const tagItems = computed(() => {
   })
 })
 
-// Build a set of paths that match the selected tags
 const matchingPaths = computed(() => {
   if (!allEvals.value || selectedTags.value.length === 0) return null
   
   const paths = new Set<string>()
   allEvals.value.forEach((item) => {
-    if (selectedTags.value.every((tag) => item.tags?.includes(tag))) {
+    if (selectedTags.value.every(tag => (item.tags as string[] | undefined)?.includes(tag))) {
       paths.add(item.path)
     }
   })
@@ -132,7 +125,6 @@ const filteredNavigation = computed(() => {
 })
 
 const handleTagSelect = (tags: string[]) => {
-  // Clear existing and set new tags
   clearTags()
   tags.forEach(tag => toggleTag(tag))
 }
@@ -158,8 +150,8 @@ const handleTagSelect = (tags: string[]) => {
             
             <!-- Tag Filter Dropdown -->
             <USelectMenu
-              :model-value="(selectedTags as any)"
-              :items="(tagItems as any)"
+              :model-value="selectedTags as any"
+              :items="tagItems as any"
               placeholder="Filter by tags..."
               multiple
               icon="i-heroicons-tag"
